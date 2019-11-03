@@ -32,6 +32,9 @@
 ## 19 Wilcoxon Rank Sum Statistic    pwilcox   qwilcox   dwilcox   rwilcox  
 ## 20 Wilcoxon Signed Rank Statistic psignrank qsignrank dsignrank rsignrank
 
+# what is probablity that 4 out of 10 next customers will make a purchase? The probablity of a purchase on one tril is .3
+dbinom(x = 4,size = 10,prob = 0.3)
+
 
 # Calculating and showing confidence intervals ----------------------------
 library(tidyverse)
