@@ -47,7 +47,7 @@ imdb_5000 %>% group_by(color) %>%
   summarise(
     mean = mean(imdb_score), # sample mean
     n = n(), # sample size
-    SE = sd(imdb_score), # standard error
+    SE = sd(imdb_score)/sqrt(n), # standard error
     t_crit = qt(p = 0.975, df = n - 1), # critical t value for the given n and p = 0.95
     err = t_crit * SE, # error limit
     lower = mean - err, # lower boundary of the conf. interval
