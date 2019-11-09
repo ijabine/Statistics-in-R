@@ -59,6 +59,58 @@ imdb_5000 %>% group_by(color) %>%
 # let's show the confidence interval using ggplot
 imdb_5000 %>% ggplot(aes(x = color, y = imdb_score)) +
   stat_summary(geom = 'pointrange', fun.data = mean_cl_normal, shape = 3) + # mean_cl_normal - calculate confidence interval using t-distribution
-# shape = 3 - we use + sign instead of dot
+  # shape = 3 - we use + sign instead of dot
   scale_x_discrete('Movies', labels = c("Black-white","Color"),na.translate = FALSE) + # na.translate = FALSE - we remove na from x.
   labs(y = "IMDB rating")
+
+
+
+# t-test in R -------------------------------------------------------------
+
+# We will use builin dataset sleep, for more info ?sleep
+
+# two sample t-test
+# 1 let's first check the independent t-test assumptions 
+# Assumption 1: are the two samples independent, well here we can only assume that the experiment was designed and prepared in such a way that the samples are independent. So, yes.
+
+# Assumption 2: are the data in two groups normally distributed?
+if(!require(car)) install.packages("car")
+library(car)
+library(tidyverse)
+group_2 <- sleep$group == 2
+qqPlot(sleep$extra[group_2])
+qqPlot(sleep$extra[! group_2])
+# On the qqplot the extra variable is within the confidence area.
+# Other ways to check normality is Shapiro-Wilk normality test fro two groups:
+shapiro.test(sleep$extra[group_2]) # p-value = 0.3511 > 0.05 
+shapiro.test(sleep$extra[! group_2]) # p-value = 0.4079 > 0.05
+# From the output two p-values are greater than 0.05, so we can assume  the normality
+
+# Assumption 3: Do the two populations have the same variances?
+# Checking if there are no NAs
+colSums(is.na(sleep)) # good, no NAs
+# Let's check the summary statistics:
+sleep %>% group_by(group) %>%
+  summarise(
+    count = n(),
+    mean = mean(extra, na.rm = TRUE),
+    sd = sd(extra, na.rm = TRUE))
+# let's see the box plots as well:
+sleep %>% ggplot(aes(y=extra,color = group)) +
+  geom_boxplot()
+# To check the variances we will perform an F test to compare the variances of two samples from normal populations:
+f_test <- var.test(extra ~ group,data = sleep)
+f_test # p-value = 0.7427 > 0.05. => no significant difference between the variances of two groups. therefor we can use t-test with two equal variances.
+# Now we can do t-test, to answer the question if there is any significant difference between two groups?
+t_test <- t.test(extra ~ group,data = sleep, var.equal = TRUE)
+t_test # the p-value of the test is 0.07919 > 0.05. We can not reject the null hyposesis and can conclude that the two groups are not significantly different.
+# to access individual componenets of the test result type: t_test$ and select from the list.
+# Should we want to perform one-sided tests:
+t_test_less <- t.test(extra ~ group,data = sleep, var.equal = TRUE, alternative = "less") 
+t_test_greater <- t.test(extra ~ group,data = sleep, var.equal = TRUE, alternative = "greater")
+
+# Finally, let's show the test results, with confidence levels, using ggplot:
+sleep %>% ggplot(aes(x = group, y = extra)) +
+  theme_bw() +
+  stat_summary(fun.data = mean_cl_normal)
+# Voila from the plot we can also see that the confidence intervals of the two groups overlap, which supports the null hyposesis.
