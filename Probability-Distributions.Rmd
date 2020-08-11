@@ -167,7 +167,6 @@ Expected value: E(x) = np
 Variance: Var(x) = np(1-p),
 where n - known number of trials and p -  known probability of success
 
-So, if 4 customers enter the shop, to compute the expected number of customers who will make a purchase will be 4*0.3 = 1.2
 
  6.2. Poisson Probability Distribution
 
@@ -176,7 +175,7 @@ The following two properties must be satisfied for a random variable to follow P
  1. The probability of an occurrence is the same for any two intervals of equal length.
  2. The occurrence or nonoccurrence in any interval is independent of the occurrence or nonoccurrence in any other interval.
 POISSON PROBABILITY FUNCTION:
-f(x)=μ^x*e^-μ/x!
+f(x)=(μ^x*e^-μ)/x!
 Where:
 
 f(x)- the probability of x occurrences in an interval
@@ -193,4 +192,51 @@ plot(dpois(1:100,15),type = "h",col = 3, lwd = 3, ylab = "Probability")
 Note: mean and variance of poisson distribution are equal.
 
  6.3. Hypergeometric Probability Distribution
+ 
+The hypergeometric probability distribution is related to the binomial distribution, however they differ in two ways:
+
+In the hypergeometric distribution:
+ * the trials are not independent. It's because a sample of size n is randomly selected without replacement from a population of N items.
+ * the probability of success changes from trial to trial, because we take a sample without replacement.
+Notation:
+N: The number of items in the population.
+k: The number of items in the population that are classified as successes.
+n: The number of items in the sample.
+x: The number of items in the sample that are classified as successes.
+In the population, k items can be classified as successes, and N - k items can be classified as failures.
+If it was a binomial experiment (with replacement), then the probability of success be constant on every trial, whereas here it changes on every trial (without replacement).
+Suppose a population consists of N items, k of which are successes. And a random sample drawn from that population consists of n items, x of which are successes. The hypergeometric probability is calculated using this formula:
+f(x; N, n, k) = [ kCx ] [ N-kCn-x ] / [ NCn ]
+
+[C] - combinations
+
+Business example from Anderson et al: Statistics for Business and Economics book:
+
+Axline Computers manufactures personal computers at two plants, one in Texas and the other in Hawaii. The Texas plant has 40 employees; the Hawaii plant has 20. A random sample of 10 employees is to be asked to fill out a benefits questionnaire.
+
+ 1. What is the probability that one of the employees in the sample works at the plant in
+Hawaii?
+ 2. What is the probability that two or more of the employees in the sample work at the
+plant in Hawaii?
+
+In this example we have the following information:
+N = Population Size = 40 + 20 = 60
+n = Sample size = 10
+k = Number of observed success = number of workers in Hawaii = 20.
+```{r hypergeometric distribution 1}
+# 1. What is the probability that one of the employees in the sample works at the plant in Hawaii?
+dhyper(x = 1,k = 10,m = 20,n = 40)
+
+# k = Sample size = 10
+# m = Number of observed success = number of workers in Hawaii = 20
+# n = Number of failures (employees working in Texas) = 40
+
+```
+```{r hypergeometric distribution 2}
+# 2. What is the probability that two or more of the employees in the sample work at the plant in Hawaii?
+# 1 - f(0) - f(1)
+p_x_2 <- 1 - dhyper(x = 0,k = 10,m = 20,n = 40) - dhyper(x = 1,k = 10,m = 20,n = 40)
+
+
+```
 
