@@ -22,6 +22,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ### 3. Useful Links & books
  $ Camm et al: Business Analytics, 3rd edition
  $ Anderson et al: Statistics for Business and Economics
+ $ The CRAN task view on distributions: https://CRAN.R-project.org/view=Distributions
  
 ### 4. Introduction
 
@@ -95,6 +96,7 @@ E(x) = μ = sum(x*f(x)), where f(x) is a probability function.
 
 ### 5. Probability Distribution R Functions
 
+For most of the classical distributions, base R provides probability distribution functions (p), density functions (d), quantile functions (q), and random number generation (r).
 p - probability distribution function
 q - quantile, the inverse DF for a continuous random variable or the quantile function
 d - density, the probability mass function (PMF) for a discrete random variable or the probability density function (PDF) for a continuous random variable
@@ -134,12 +136,13 @@ r - a random variable having the specified distribution
  6.1. Binomial Probability Distribution
  
  It is associated with a multiple-step experiment also know as the binomial experiment This experiment has two possible outcomes: either success or failure.
- * Propoerties of a binomial experiment:
+ * Properties of a binomial experiment:
    1. The experiment consists of a sequence of n identical trials.
    2. Two outcomes are possible on each trial: one outcome is refered as a success and the other outcome as a failure.
-   3. The probability of a success, denoted by p, does not change from trial to trial. Consequently, the probability of a failure, denoted by 1 - p, does not change from trial to trial.
+   3. The probability of a success, denoted by p, does not change from trial to trial. Consequently, the probability of a failure, denoted by 1 - p, does not change from trial to trial. a Bernoulli random variable is equal to 1 (success) with probability p and to 0 (failure) with probability 1-p.
    4. The trials are independent.
 In a binomial experiment, our interest is in the number of successes occurring in the n trials. If we let x denote the number of successes occurring in the n trials, we see that x can assume the values of 0, 1, 2, 3, . . . , n.
+
  * Business examples where binomial distribution can be used:
    -> What is the probability if out of 100 customers 20 will buy, knowing from historical figures (on the basis of past experience) that the  probability that a randomly selected customer will make a purchase is .20.
    -> What is probability that out of 50 randomly selected products, 10 are faulty.
@@ -232,11 +235,27 @@ dhyper(x = 1,k = 10,m = 20,n = 40)
 # n = Number of failures (employees working in Texas) = 40
 
 ```
+Let's solve now second problem.
 ```{r hypergeometric distribution 2}
 # 2. What is the probability that two or more of the employees in the sample work at the plant in Hawaii?
 # 1 - f(0) - f(1)
 p_x_2 <- 1 - dhyper(x = 0,k = 10,m = 20,n = 40) - dhyper(x = 1,k = 10,m = 20,n = 40)
 
+
+```
+
+ 6.4. Geometric Probability Distribution
+
+The geometric distribution is the probability distribution of the number of failures we get by repeating a Bernoulli experiment until we obtain the first success. We repeat the experiment until we get the first success, and then we count the number X of failures that we faced prior to recording the success.
+* Bernoulli experiment - a random experiment having two possible outcomes: either success or failure.
+
+Business example of the Geometric Probability Distributions
+ 1. What is the expected number of days that will elapse before the first customer buys something from us? Knowing that the probability of a customer buying is p = 0.001. 
+ The expected value of a geometric random variable X is E[X] = (1 - p)/p
+
+ 2. The number of customers who entere our shop before the first customer buys something has a geometric distribution.
+
+```{r Geometric Probability Distribution}
 
 ```
 
