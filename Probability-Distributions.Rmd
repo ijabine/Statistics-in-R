@@ -155,11 +155,24 @@ p = the probability of a success on one trial
 n = the number of trials
 f(x) = the probability of x successes in n trials
 CNX = n!/x!(n - x)!
-In R to calculate binomial probability use dbinom() function:
+ * R function dpois(x, lambda) is the probability of x successes in a period when the expected number of events is lambda. 
+ * R function ppois(q, lambda, lower.tail) is the cumulative probability (lower.tail = TRUE for left tail, lower.tail = FALSE for right tail) of less than or equal to q successes. 
+ * R function rpois(n, lambda) returns n random numbers from the Poisson distribution x ~ P(lambda). 
+ * R function qpois(p, lambda, lower.tail returns the value (quantile) at the specified cumulative probability (percentile) p
 
 ```{r binomial probability calculation}
 # what is probablity that 4 out of 10 next customers will make a purchase? The probablity of a purchase on one trial is .3
 dbinom(x = 4,size = 10,prob = 0.3)
+
+# What is the probability of making 3 to 5 sales in a day if the average sales rate is 4 per day?
+
+# Using cumulative probability
+ppois(q = 5, lambda = 3, lower.tail = TRUE) - ppois(q = 2, lambda = 3, lower.tail = TRUE)
+
+# Using exact probability
+dpois(x = 3, lambda = 3) +
+  dpois(x = 4, lambda = 3) +
+  dpois(x = 5, lambda = 3)
 
 # Let's display the probability distribution function for different values of x.
 plot(dbinom(x = 1:100,size = 10,prob = 0.3),type = "h",col = 3, lwd = 3, ylab = "Probability")
@@ -254,6 +267,15 @@ Business example of the Geometric Probability Distributions
  The expected value of a geometric random variable X is E[X] = (1 - p)/p
 
  2. The number of customers who entere our shop before the first customer buys something has a geometric distribution.
+
+R standard family of functions: d/p/q/rgeom is used.
+
+Also note that p- and q- functions have a default parameter lower.tail = TRUE:
+pbinom(q, size, prob, lower.tail = TRUE, log.p = FALSE)
+qgeom(p, prob, lower.tail = TRUE, log.p = FALSE)
+
+lower.tail = logical; if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+
 
 ```{r Geometric Probability Distribution}
 
