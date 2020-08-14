@@ -96,8 +96,16 @@ CNX = n!/x!(n - x)!
 # what is probablity that 4 out of 10 next customers will make a purchase? The probablity of a purchase on one trial is .3
 dbinom(x = 4,size = 10,prob = 0.3)
 
+# What is the probability of having fewer than 4 customers buying something out of 10 customers visiting our shop where probability of a purchase is 0.3?
 
+pbinom(q = 4, size = 10, p = 0.3, lower.tail = TRUE)
 
+# We can compare this probability with the simulated one:
+mean(rbinom(n = 10000, size = 10, prob = 0.3) <= 4)
+
+# To calculate teh probability if number of customers buying something is more than 4, set lower.tail = FALSE:
+pbinom(q = 4, size = 10, p = 0.3, lower.tail = FALSE)
+# Obviously: pbinom(q = 4, size = 10, p = 0.3, lower.tail = TRUE) + pbinom(q = 4, size = 10, p = 0.3, lower.tail = FALSE) must be = 1.
 # Let's display the probability distribution function for different values of x.
 plot(dbinom(x = 1:100,size = 10,prob = 0.3),type = "h",col = 3, lwd = 3, ylab = "Probability")
 
