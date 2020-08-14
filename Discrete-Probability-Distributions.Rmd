@@ -1,0 +1,226 @@
+---
+title: "Discrete Probability Distributions"
+author: "Illarion Jabine"
+date: "6/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+### 1. Required packages
+ * stat: core R package
+
+
+### 2. Key terms
+ * Probability Distributions 
+ * Discrete Probability Distribution
+ * Continues Probability Distribution
+
+### 3. Useful Links & books
+ $ Camm et al: Business Analytics, 3rd edition
+ $ Anderson et al: Statistics for Business and Economics
+ $ The CRAN task view on distributions: https://CRAN.R-project.org/view=Distributions
+ 
+### 4. Probability Distribution R Functions
+
+For most of the classical distributions, base R provides probability distribution functions (p), density functions (d), quantile functions (q), and random number generation (r).
+p - probability distribution function
+q - quantile, the inverse DF for a continuous random variable or the quantile function
+d - density, the probability mass function (PMF) for a discrete random variable or the probability density function (PDF) for a continuous random variable
+r - a random variable having the specified distribution
+ * For a continuous distribution use p and q functions
+ * For a discrete distribution use d function that calculates the density 
+    Distribution                   p         q         d         r        
+    <chr>                          <chr>     <chr>     <chr>     <chr>    
+  1 Beta                           pbeta     qbeta     dbeta     rbeta    
+  2 Binomial                       pbinom    qbinom    dbinom    rbinom   
+  3 Cauchy                         pcauchy   qcauchy   dcauchy   rcauchy  
+  4 Chi-Square                     pchisq    qchisq    dchisq    rchisq   
+  5 Exponential                    pexp      qexp      dexp      rexp     
+  6 F                              pf        qf        df        rf       
+  7 Gamma                          pgamma    qgamma    dgamma    rgamma   
+  8 Geometric                      pgeom     qgeom     dgeom     rgeom    
+  9 Hypergeometric                 phyper    qhyper    dhyper    rhyper   
+ 10 Logistic                       plogis    qlogis    dlogis    rlogis   
+ 11 Log Normal                     plnorm    qlnorm    dlnorm    rlnorm   
+ 12 Negative Binomial              pnbinom   qnbinom   dnbinom   rnbinom  
+ 13 Normal                         pnorm     qnorm     dnorm     rnorm    
+ 14 Poisson                        ppois     qpois     dpois     rpois    
+ 15 Student t                      pt        qt        dt        rt       
+ 16 Studentized Range              ptukey    qtukey    dtukey    rtukey   
+ 17 Uniform                        punif     qunif     dunif     runif    
+ 18 Weibull                        pweibull  qweibull  dweibull  rweibull 
+ 19 Wilcoxon Rank Sum Statistic    pwilcox   qwilcox   dwilcox   rwilcox  
+ 20 Wilcoxon Signed Rank Statistic psignrank qsignrank dsignrank rsignrank
+
+### 5. Discrete Probability Distributions
+ 
+ All major text books always give these three disctributions as examples: 
+  1. Binomial
+  2. Poisson
+  3. Hypergeometric
+  4. Geometric
+  
+ 5.1. Binomial Probability Distribution
+ 
+ It is associated with a multiple-step experiment also know as the binomial experiment This experiment has two possible outcomes: either success or failure.
+ * Properties of a binomial experiment:
+   1. The experiment consists of a sequence of n identical trials.
+   2. Two outcomes are possible on each trial: one outcome is refered as a success and the other outcome as a failure.
+   3. The probability of a success, denoted by p, does not change from trial to trial. Consequently, the probability of a failure, denoted by 1 - p, does not change from trial to trial. a Bernoulli random variable is equal to 1 (success) with probability p and to 0 (failure) with probability 1-p.
+   4. The trials are independent.
+In a binomial experiment, our interest is in the number of successes occurring in the n trials. If we let x denote the number of successes occurring in the n trials, we see that x can assume the values of 0, 1, 2, 3, . . . , n.
+
+ * Business examples where binomial distribution can be used:
+   -> What is the probability if out of 100 customers 20 will buy, knowing from historical figures (on the basis of past experience) that the  probability that a randomly selected customer will make a purchase is .20.
+   -> What is probability that out of 50 randomly selected products, 10 are faulty.
+We try to calculate the probability of x successes in the n trials.
+
+f(x) = CNX*p^x(1 - p)^(n-x)
+Where:
+x = the number of successes
+p = the probability of a success on one trial
+n = the number of trials
+f(x) = the probability of x successes in n trials
+CNX = n!/x!(n - x)!
+
+ * R function dbinom(x, size, prob) is the probability of x successes in size trials when the probability of success is prob. 
+ * R function pbinom(q, size, prob, lower.tail) is the cumulative probability (lower.tail = TRUE for left tail, lower.tail = FALSE for right tail) of less than or equal to q successes. 
+ * R function rbinom(n, size, prob) returns n random numbers from the binomial distribution x~b(size,prob).
+
+
+```{r binomial probability calculation}
+# what is probablity that 4 out of 10 next customers will make a purchase? The probablity of a purchase on one trial is .3
+dbinom(x = 4,size = 10,prob = 0.3)
+
+
+
+# Let's display the probability distribution function for different values of x.
+plot(dbinom(x = 1:100,size = 10,prob = 0.3),type = "h",col = 3, lwd = 3, ylab = "Probability")
+
+```
+
+Expected value: E(x) = np
+Variance: Var(x) = np(1-p),
+where n - known number of trials and p -  known probability of success
+
+
+ 5.2. Poisson Probability Distribution
+
+Poisson distribution is useful in estimating the number of occurrences over a specified interval of time or space. For example, number of arrivals at a bar in one hour, the number of repairs per 20 kilometers of a highway, etc.
+The following two properties must be satisfied for a random variable to follow Poisson probability distribution:
+ 1. The probability of an occurrence is the same for any two intervals of equal length.
+ 2. The occurrence or nonoccurrence in any interval is independent of the occurrence or nonoccurrence in any other interval.
+POISSON PROBABILITY FUNCTION:
+f(x)=(μ^x*e^-μ)/x!
+Where:
+
+f(x)- the probability of x occurrences in an interval
+x - a discrete random variable indicating the number of occurrences in the interval
+μ - expected value or mean number of occurrences
+e - 2.71828
+
+ * R function dpois(x, lambda) is the probability of x successes in a period when the expected number of events is lambda. 
+ * R function ppois(q, lambda, lower.tail) is the cumulative probability (lower.tail = TRUE for left tail, lower.tail = FALSE for right tail) of less than or equal to q successes. 
+ * R function rpois(n, lambda) returns n random numbers from the Poisson distribution x ~ P(lambda). 
+ * R function qpois(p, lambda, lower.tail returns the value (quantile) at the specified cumulative probability (percentile) p
+ 
+See this link for more examples: https://rpubs.com/mpfoley73/456645
+
+Let say we want to know the probability of x = 10 customers arriving in a shop in 1 hour. 
+Analysis of historical data shows that the average number of customers arriving in a 60-minute period of time is 15 (lambda).
+```{r poisson probability calculation }
+prob_10_customers <- dpois(10,15)
+
+# What is the probability of making 3 to 5 sales in a day if the average sales rate is 4 per day?
+
+# Using cumulative probability function
+ppois(q = 5, lambda = 3, lower.tail = TRUE) - ppois(q = 2, lambda = 3, lower.tail = TRUE)
+
+# Using exact probability or probability mass function
+dpois(x = 3, lambda = 3) +
+  dpois(x = 4, lambda = 3) +
+  dpois(x = 5, lambda = 3)
+
+
+plot(dpois(1:100,15),type = "h",col = 3, lwd = 3, ylab = "Probability")
+```
+Note: mean and variance of poisson distribution are equal.
+
+ 5.3. Hypergeometric Probability Distribution
+ 
+The hypergeometric probability distribution is related to the binomial distribution, however they differ in two ways:
+
+In the hypergeometric distribution:
+ * the trials are not independent. It's because a sample of size n is randomly selected without replacement from a population of N items.
+ * the probability of success changes from trial to trial, because we take a sample without replacement.
+Notation:
+N: The number of items in the population.
+k: The number of items in the population that are classified as successes.
+n: The number of items in the sample.
+x: The number of items in the sample that are classified as successes.
+In the population, k items can be classified as successes, and N - k items can be classified as failures.
+If it was a binomial experiment (with replacement), then the probability of success be constant on every trial, whereas here it changes on every trial (without replacement).
+Suppose a population consists of N items, k of which are successes. And a random sample drawn from that population consists of n items, x of which are successes. The hypergeometric probability is calculated using this formula:
+f(x; N, n, k) = [ kCx ] [ N-kCn-x ] / [ NCn ]
+
+[C] - combinations
+
+Business example from Anderson et al: Statistics for Business and Economics book:
+
+Axline Computers manufactures personal computers at two plants, one in Texas and the other in Hawaii. The Texas plant has 40 employees; the Hawaii plant has 20. A random sample of 10 employees is to be asked to fill out a benefits questionnaire.
+
+ 1. What is the probability that one of the employees in the sample works at the plant in
+Hawaii?
+ 2. What is the probability that two or more of the employees in the sample work at the
+plant in Hawaii?
+
+In this example we have the following information:
+N = Population Size = 40 + 20 = 60
+n = Sample size = 10
+k = Number of observed success = number of workers in Hawaii = 20.
+```{r hypergeometric distribution 1}
+# 1. What is the probability that one of the employees in the sample works at the plant in Hawaii?
+dhyper(x = 1,k = 10,m = 20,n = 40)
+
+# k = Sample size = 10
+# m = Number of observed success = number of workers in Hawaii = 20
+# n = Number of failures (employees working in Texas) = 40
+
+```
+Let's solve now second problem.
+```{r hypergeometric distribution 2}
+# 2. What is the probability that two or more of the employees in the sample work at the plant in Hawaii?
+# 1 - f(0) - f(1)
+p_x_2 <- 1 - dhyper(x = 0,k = 10,m = 20,n = 40) - dhyper(x = 1,k = 10,m = 20,n = 40)
+
+
+```
+
+ 5.4. Geometric Probability Distribution
+
+The geometric distribution is the probability distribution of the number of failures we get by repeating a Bernoulli experiment until we obtain the first success. We repeat the experiment until we get the first success, and then we count the number X of failures that we faced prior to recording the success.
+* Bernoulli experiment - a random experiment having two possible outcomes: either success or failure.
+
+Business example of the Geometric Probability Distributions
+ 1. What is the expected number of days that will elapse before the first customer buys something from us? Knowing that the probability of a customer buying is p = 0.001. 
+ The expected value of a geometric random variable X is E[X] = (1 - p)/p
+
+ 2. The number of customers who entere our shop before the first customer buys something has a geometric distribution.
+
+R standard family of functions: d/p/q/rgeom is used.
+
+Also note that p- and q- functions have a default parameter lower.tail = TRUE:
+pbinom(q, size, prob, lower.tail = TRUE, log.p = FALSE)
+qgeom(p, prob, lower.tail = TRUE, log.p = FALSE)
+
+lower.tail = logical; if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
+
+
+```{r Geometric Probability Distribution}
+
+```
+
