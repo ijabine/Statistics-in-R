@@ -219,7 +219,10 @@ Business example of the Geometric Probability Distributions
 
  2. The number of customers who entere our shop before the first customer buys something has a geometric distribution.
 
-R standard family of functions: d/p/q/rgeom is used.
+ * R function dgeom(x, prob) is the probability of x failures prior to the first success when the probability of success is prob. 
+ * R function pgeom(q, prob, lower.tail) is the cumulative probability (lower.tail = TRUE for left tail, lower.tail = FALSE for right tail) of less than or equal to q failures prior to success. 
+ * R function rgeom(n, size, prob) returns n random numbers from the geometric distribution x~geom(prob). 
+ * R function qgeom(p, prob, lower.tail) is the number of failures at the qth percentile (lower.tail = TRUE).
 
 Also note that p- and q- functions have a default parameter lower.tail = TRUE:
 pbinom(q, size, prob, lower.tail = TRUE, log.p = FALSE)
