@@ -115,6 +115,63 @@ Expected value: E(x) = np
 Variance: Var(x) = np(1-p),
 where n - known number of trials and p -  known probability of success
 
+Some more examples of binomial distribution:
+1. A Harris Interactive survey for InterContinental Hotels & Resorts asked respondents, “When
+traveling internationally, do you generally venture out on your own to experience culture,
+or stick with your tour group and itineraries?” The survey found that 23% of the respondents
+stick with their tour group (USA Today, January 21, 2004).
+
+```{r}
+# a. In a sample of six international travelers, what is the probability that two will stick with their tour group?
+dbinom(x = 2,size = 6,prob = 0.23)
+
+# b. In a sample of six international travelers, what is the probability that at least two will stick with their tour group?
+pbinom(q = 1,size = 6,prob = 0.23,lower.tail = FALSE)
+
+# c. In a sample of 10 international travelers, what is the probability that none will stick with the tour group?
+dbinom(x = 0,size = 10,prob = 0.23)
+
+```
+2. A university found that 20% of its students withdraw without completing the introductory
+statistics course. Assume that 20 students registered for the course.
+
+```{r}
+# a. Compute the probability that 2 or fewer will withdraw
+pbinom(q = 2,size = 20,prob = 0.20,lower.tail = TRUE)
+
+# b. Compute the probability that exactly four will withdraw.
+dbinom(x = 4,size = 20,prob = 0.20)
+
+# c. Compute the probability that more than three will withdraw
+pbinom(q = 3,size = 20,prob = 0.20,lower.tail = FALSE)
+
+# d. Compute the expected number of withdrawals.
+# E(x) = n * p
+20 * 0.2
+```
+
+3. According to a survey conducted by TD Ameritrade, one out of four investors have
+exchange-traded funds in their portfolios (USA Today, January 11, 2007). Consider a sample
+of 20 investors.
+d. Compute the expected number of investors who have exchange-traded funds in their
+portfolios.
+```{r}
+# a. Compute the probability that exactly 4 investors have exchange-traded funds in their portfolios.
+
+dbinom(x = 4, size = 20, prob = 0.25)
+
+# b. Compute the probability that at least 2 of the investors have exchange-traded funds in their portfolios.
+
+1 - pbinom(q = 1,size = 20,prob = 0.25,lower.tail = TRUE)
+
+# c. If you found that exactly 12 of the investors have exchange-traded funds in their portfolios, would you doubt the accuracy of the survey results?
+# TD's claim is that prob = 0.25 (it's our null hyposesis). With out imperical findings (12/20) we need to test the hyposesis.
+dbinom(x = 12, size = 20, prob = 0.25)
+
+
+
+```
+
 
  5.2. Poisson Probability Distribution
 
