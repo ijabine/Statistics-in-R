@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### 1. Required packages
  * stat: core R package
+ * tidyverse
 
 
 ### 2. Key terms
@@ -93,6 +94,7 @@ CNX = n!/x!(n - x)!
 
 
 ```{r binomial probability calculation}
+library(tidyverse)
 # what is probablity that 4 out of 10 next customers will make a purchase? The probablity of a purchase on one trial is .3
 dbinom(x = 4,size = 10,prob = 0.3)
 
@@ -153,8 +155,7 @@ pbinom(q = 3,size = 20,prob = 0.20,lower.tail = FALSE)
 3. According to a survey conducted by TD Ameritrade, one out of four investors have
 exchange-traded funds in their portfolios (USA Today, January 11, 2007). Consider a sample
 of 20 investors.
-d. Compute the expected number of investors who have exchange-traded funds in their
-portfolios.
+
 ```{r}
 # a. Compute the probability that exactly 4 investors have exchange-traded funds in their portfolios.
 
@@ -165,10 +166,17 @@ dbinom(x = 4, size = 20, prob = 0.25)
 1 - pbinom(q = 1,size = 20,prob = 0.25,lower.tail = TRUE)
 
 # c. If you found that exactly 12 of the investors have exchange-traded funds in their portfolios, would you doubt the accuracy of the survey results?
-# TD's claim is that prob = 0.25 (it's our null hyposesis). With out imperical findings (12/20) we need to test the hyposesis.
-dbinom(x = 12, size = 20, prob = 0.25)
+# TD's claim is that prob = 0.25 (it's our null hypothesis). With out imperical findings (12/20) we need to test the hypothesis.
+# Assuming that the null hypothesis is true, i.e. prob = 0.25 let's calculate the probability of obtaining x = 12:
+# We define alfa = 0.05
+dbinom(x = 12, size = 20, prob = 0.25) # p = 0.0007516875 < alfa => reject the null hypothesis.
 
+# d. Compute the expected number of investors who have exchange-traded funds in their portfolios.
+# The mean of a binomial distribution is the product of the sample size and the probability: mu = size * prob = 20 * 0.25 = 5
 
+# We can check by running this simulation:
+
+mean(rbinom(n = 10000, size = 20, prob = 0.25))
 
 ```
 
@@ -195,7 +203,7 @@ e - 2.71828
  
 See this link for more examples: https://rpubs.com/mpfoley73/456645
 
-Let say we want to know the probability of x = 10 customers arriving in a shop in 1 hour. 
+Let us say we want to know the probability of x = 10 customers arriving in a shop in 1 hour. 
 Analysis of historical data shows that the average number of customers arriving in a 60-minute period of time is 15 (lambda).
 ```{r poisson probability calculation }
 prob_10_customers <- dpois(10,15)
@@ -212,8 +220,52 @@ dpois(x = 3, lambda = 3) +
 
 
 plot(dpois(1:100,15),type = "h",col = 3, lwd = 3, ylab = "Probability")
+
+# Great way to show probability density and cumulative probabilities on one plot. Code source: https://rpubs.com/mpfoley73/456645
+events <- 0:10
+density <- dpois(x = events, lambda = 3)
+prob <- ppois(q = events, lambda = 3, lower.tail = TRUE)
+df <- data.frame(events, density, prob)
+ggplot(df, aes(x = factor(events), y = density)) +
+  geom_col() +
+  geom_text(
+    aes(label = round(density,2), y = density + 0.01),
+    position = position_dodge(0.9),
+    size = 3,
+    vjust = 0
+  ) +
+  labs(title = "PMF and CDF of Poisson Distribution",
+       subtitle = "P(3).",
+       x = "Events (x)",
+       y = "Density") +
+  geom_line(data = df, aes(x = events, y = prob))
 ```
 Note: mean and variance of poisson distribution are equal.
+
+Example:
+The National Safety Council (NSC) estimates that off-the-job accidents cost U.S. businesses
+almost $200 billion annually in lost productivity (National Safety Council, March
+2006). Based on NSC estimates, companies with 50 employees are expected to average
+three employee off-the-job accidents per year. Answer the following questions for companies
+with 50 employees.
+We have the following: lambda = 3 per year
+```{r}
+# a. What is the probability of no off-the-job accidents during a one-year period?
+dpois(x = 0, lambda = 3)
+
+# b. What is the probability of at least two off-the-job accidents during a one-year period?
+# Using cumulative probability function
+ppois(q = 1, lambda = 3, lower.tail = FALSE)
+
+# c. What is the expected number of off-the-job accidents during six months?
+# it's the mean of 1 year multiplied by the number of years:
+m <- 3*1/2
+
+# d. What is the probability of no off-the-job accidents during the next six months?
+dpois(x = 0, lambda = m)
+
+```
+
 
  5.3. Hypergeometric Probability Distribution
  
@@ -265,6 +317,32 @@ p_x_2 <- 1 - dhyper(x = 0,k = 10,m = 20,n = 40) - dhyper(x = 1,k = 10,m = 20,n =
 
 ```
 
+Example,
+The Zagat Restaurant Survey provides food, decor, and service ratings for some of the top
+restaurants across the United States. For 15 restaurants located in Boston, the average price
+of a dinner, including one drink and tip, was $48.60. You are leaving for a business trip to
+Boston and will eat dinner at three of these restaurants. Your company will reimburse you
+for a maximum of $50 per dinner. Business associates familiar with these restaurants have
+told you that the meal cost at one-third of these restaurants will exceed $50. Suppose that
+you randomly select three of these restaurants for dinner.
+
+```{r}
+# k = Sample size = 3
+# m = Number of observed success = 5
+# n = Number of failures = 10
+
+
+# a. What is the probability that none of the meals will exceed the cost covered by your company?
+dhyper(x = 0,k = 3,m = 5,n = 10)
+# b. What is the probability that one of the meals will exceed the cost covered by your company?
+dhyper(x = 1,k = 3,m = 5,n = 10)
+# c. What is the probability that two of the meals will exceed the cost covered by your company?
+dhyper(x = 2,k = 3,m = 5,n = 10)
+# d. What is the probability that all three of the meals will exceed the cost covered by your company?
+dhyper(x = 3,k = 3,m = 5,n = 10)
+```
+
+
  5.4. Geometric Probability Distribution
 
 The geometric distribution is the probability distribution of the number of failures we get by repeating a Bernoulli experiment until we obtain the first success. We repeat the experiment until we get the first success, and then we count the number X of failures that we faced prior to recording the success.
@@ -287,8 +365,9 @@ qgeom(p, prob, lower.tail = TRUE, log.p = FALSE)
 
 lower.tail = logical; if TRUE (default), probabilities are P[X ≤ x], otherwise, P[X > x].
 
-
+Example: What is the probability that before the first customer buys something in our shop, there are 5 customers before him who have not bought anything? The probability that a customer buys something is 0.3.
+The first success is when a customer buys someting. We need to know the probability of 5 customers not buying anything before the first success.  
 ```{r Geometric Probability Distribution}
-
+dgeom(x = 5, prob = 0.3)
 ```
 
