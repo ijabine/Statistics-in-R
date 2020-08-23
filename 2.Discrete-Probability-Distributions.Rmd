@@ -266,6 +266,35 @@ dpois(x = 0, lambda = m)
 
 ```
 
+Example 2:
+A regional director responsible for business development in the state of Pennsylvania is
+concerned about the number of small business failures. If the mean number of small business
+failures per month is 10, what is the probability that exactly four small businesses will
+fail during a given month? Assume that the probability of a failure is the same for any two
+months and that the occurrence or nonoccurrence of a failure in any month is independent
+of failures in any other month.
+
+```{r}
+# The random variable follows poisson distribution.
+# Given mu(lambda) = 10
+dpois(x = 4, lambda = 10)
+
+```
+Example 3:
+Customer arrivals at a bank are random and independent; the probability of an arrival in any
+one-minute period is the same as the probability of an arrival in any other one-minute period.
+Answer the following questions, assuming a mean arrival rate of three customers per minute.
+```{r}
+# a. What is the probability of exactly three arrivals in a one-minute period?
+# Given: lambda = 3
+dpois(x = 3, lambda = 3)
+
+# b. What is the probability of at least three arrivals in a one-minute period?
+# Using cumulative probability function
+# At least 3 == more than and including 3:
+ppois(q = 2, lambda = 3, lower.tail = FALSE)
+```
+
 
  5.3. Hypergeometric Probability Distribution
  
@@ -317,7 +346,7 @@ p_x_2 <- 1 - dhyper(x = 0,k = 10,m = 20,n = 40) - dhyper(x = 1,k = 10,m = 20,n =
 
 ```
 
-Example,
+Example 1:
 The Zagat Restaurant Survey provides food, decor, and service ratings for some of the top
 restaurants across the United States. For 15 restaurants located in Boston, the average price
 of a dinner, including one drink and tip, was $48.60. You are leaving for a business trip to
@@ -340,6 +369,41 @@ dhyper(x = 1,k = 3,m = 5,n = 10)
 dhyper(x = 2,k = 3,m = 5,n = 10)
 # d. What is the probability that all three of the meals will exceed the cost covered by your company?
 dhyper(x = 3,k = 3,m = 5,n = 10)
+```
+
+Example 2:
+A deck of playing cards contains 52 cards, four of which are aces. What is the probability
+that the deal of a five-card hand provides:
+a. A pair of aces?
+b. Exactly one ace?
+c. No aces?
+d. At least one ace?
+
+Solution.
+Given: 
+Population size = 52
+Number of draws = 5
+Number of observed successes = 4
+```{r}
+# k = Sample size = 5
+# m = Number of observed success = 4
+# n = Number of failures = 48
+
+# a. A pair of aces? Evaluate at x = 2
+dhyper(x = 2,k = 5,m = 4,n = 48)
+
+# b. Exactly one ace? Evaluate at x = 1
+dhyper(x = 1,k = 5,m = 4,n = 48)
+
+# c. No aces?
+dhyper(x = 0,k = 5,m = 4,n = 48)
+
+# d. At least one ace?
+phyper(q = 0,k = 5,m = 4,n = 48,lower.tail = FALSE)
+
+# Or we can also calculate using the complement rule:
+1- dhyper(x = 0,k = 5,m = 4,n = 48)
+
 ```
 
 
