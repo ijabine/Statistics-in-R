@@ -1,0 +1,91 @@
+---
+title: "3. Continuous Probability Distributions"
+author: "Illarion Jabine"
+date: "23/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+### 1. Required packages
+ * stat: core R package
+ * tidyverse
+
+
+### 2. Key terms
+ * Probability Distributions 
+ * Discrete Probability Distribution
+ * Continues Probability Distribution
+
+### 3. Useful Links & books
+ $ Camm et al: Business Analytics, 3rd edition
+ $ Anderson et al: Statistics for Business and Economics
+ $ The CRAN task view on distributions: https://CRAN.R-project.org/view=Distributions
+ 
+### 4. Probability Distribution R Functions
+
+For most of the classical distributions, base R provides probability distribution functions (p), density functions (d), quantile functions (q), and random number generation (r).
+p - probability distribution function
+q - quantile, the inverse DF for a continuous random variable or the quantile function
+d - density, the probability mass function (PMF) for a discrete random variable or the probability density function (PDF) for a continuous random variable
+r - a random variable having the specified distribution
+ * For a continuous distribution use p and q functions
+ * For a discrete distribution use d function that calculates the density 
+    Distribution                   p         q         d         r        
+    <chr>                          <chr>     <chr>     <chr>     <chr>    
+  1 Beta                           pbeta     qbeta     dbeta     rbeta    
+  2 Binomial                       pbinom    qbinom    dbinom    rbinom   
+  3 Cauchy                         pcauchy   qcauchy   dcauchy   rcauchy  
+  4 Chi-Square                     pchisq    qchisq    dchisq    rchisq   
+  5 Exponential                    pexp      qexp      dexp      rexp     
+  6 F                              pf        qf        df        rf       
+  7 Gamma                          pgamma    qgamma    dgamma    rgamma   
+  8 Geometric                      pgeom     qgeom     dgeom     rgeom    
+  9 Hypergeometric                 phyper    qhyper    dhyper    rhyper   
+ 10 Logistic                       plogis    qlogis    dlogis    rlogis   
+ 11 Log Normal                     plnorm    qlnorm    dlnorm    rlnorm   
+ 12 Negative Binomial              pnbinom   qnbinom   dnbinom   rnbinom  
+ 13 Normal                         pnorm     qnorm     dnorm     rnorm    
+ 14 Poisson                        ppois     qpois     dpois     rpois    
+ 15 Student t                      pt        qt        dt        rt       
+ 16 Studentized Range              ptukey    qtukey    dtukey    rtukey   
+ 17 Uniform                        punif     qunif     dunif     runif    
+ 18 Weibull                        pweibull  qweibull  dweibull  rweibull 
+ 19 Wilcoxon Rank Sum Statistic    pwilcox   qwilcox   dwilcox   rwilcox  
+ 20 Wilcoxon Signed Rank Statistic psignrank qsignrank dsignrank rsignrank
+
+### 5. Continuous Probability Distributions
+ 
+ All major text books always give these three continuous disctributions as examples: 
+  1. Uniform probability distribution
+  2. Exponential probability distribution
+  3. Normal probability distribution
+   
+
+There are two major differences between discrete and continuous probability distributions:
+
+1. The probability of a continuous random variable assuming a particular value is zero. Instead, the probability of the continuous random variable assumes a value within some given interval. For a discrete random variable, the probability function f(x) provides the probability that the random variable assumes a particular value. With continuous random variables we should use the  probability density function f(x). The difference is that the probability density function does not directly provide probabilities. However, the area under the graph of f(x) corresponding to a given interval does provide the probability that the continuous random variable x assumes a
+value in that interval. So when we compute probabilities for continuous random variables we
+are computing the probability that the random variable assumes any value in an interval (Anderson et al).
+
+2. The probability of a continuous random variable assuming a value within some given interval from x1 to x2 is defined to be the area under the graph of the probability density function between x1 and x2. Because a single point is an interval of zero width, this implies that the probability of a continuous random variable assuming any particular value exactly is zero. It also means that the probability of a continuous random variable assuming a value in any interval is the same whether or not the endpoints are included.
+The calculation of the expected value and variance for a continuous random variable involves integral calculus (Anderson et al).
+
+The other properties of the probability distrbution introduced for discrete variables also hold true for continuous:
+ 1. The total area under the graph of the probability density function f(x) is equal to 1
+ 2. f(x) is always positive
+
+ 5.1. Uniform probability distribution
+
+
+
+ 5.2. Exponential probability distribution 
+
+
+ 
+ 5.3. Normal probability distribution
+
+
