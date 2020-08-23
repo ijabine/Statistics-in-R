@@ -78,9 +78,40 @@ The other properties of the probability distrbution introduced for discrete vari
  1. The total area under the graph of the probability density function f(x) is equal to 1
  2. f(x) is always positive
 
+Very important note: the height of a probability density function is not a probability!
+
  5.1. Uniform probability distribution
+What does it mean a uniform probability distribution? Basically it means that it has constant probability. Classical example is the flight time. When we say the probability of a flight time is uniformly distributed, we say that this probability is the same within 1-minute interval as within any other 1-minute interval contained in the larger interval between a and b. So With every 1-minute interval being equally likely, the random variable x is said to have a uniform probability distribution. Consider a discrete counterpart (discrete uniform distribution) of rolling a dice where every outcome is equally likely and the probability of every outcome is 1/6.
+When a random variable is uniformly distributed its probability is proportional to the length of the interval.  The distribution describes an experiment where there is an arbitrary outcome that lies between certain bounds. The bounds are defined by the parameters, a and b, which are the minimum and maximum values. Graphically, the uniform probability density function is portrayed as a rectangle where (b-a) is the base and (1/(b-a)) is the height. The height is equal to the value of the the probability density function. The probability density function of the continuous uniform distribution is:
+f(x)= 1/(b - a), for a <= x <= b
+and
+f(x) = 0 for elsewhere
+Uniform probability = width * height
 
+```{r}
+# To show that indeed it's a uniform dictribution:
+hist(runif(n = 10000,min = 5,max = 15),breaks = 30)
 
+# punif == CDF:
+plot(punif(q=10:20,min = 10,max = 20))
+```
+
+Example:
+On average, 30-minute television sitcoms have 22 minutes of programming (CNBC,
+February 23, 2006). Assume that the probability distribution for minutes of programming
+can be approximated by a uniform distribution from 18 minutes to 26 minutes.
+
+Given f(x) = 1/(26-18)
+```{r}
+#a. What is the probability a sitcom will have 25 or more minutes of programming?
+punif(q = 25,min = 18,max = 26,lower.tail = FALSE)
+
+# b. What is the probability a sitcom will have between 21 and 25 minutes of programming?
+1 - punif(q = 21,min = 18,max = 26,lower.tail = TRUE)+punif(q = 25,min = 18,max = 26,lower.tail = FALSE)
+
+# c. What is the probability a sitcom will have more than 10 minutes of commercials or other nonprogramming interruptions?
+punif(q = 20,min = 18,max = 26,lower.tail = TRUE)
+```
 
  5.2. Exponential probability distribution 
 
