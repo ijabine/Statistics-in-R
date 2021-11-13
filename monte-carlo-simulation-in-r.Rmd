@@ -1,0 +1,191 @@
+---
+title: "Monte Carlo Simulation"
+author: "Illarion  Jabine"
+date: "12/11/2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+### 1. Required packages:
+
+
+* dlookr: A collection of tools for data diagnosis, exploration, and transformation
+* flextable: Create pretty tables for 'HTML', 'PDF', 'Microsoft Word' and 'Microsoft PowerPoint'  documents from 'R Markdown'.
+* boot: Functions and datasets for bootstrapping
+* ggstatsplot: Extension of 'ggplot2', 'ggstatsplot' creates graphics with details from statistical tests included in the plots themselves
+* MonteCarlo (not used here, just for a reference): Simplifies Monte Carlo simulation studies by automatically setting up loops to run over parameter grids and parallelising the Monte Carlo repetitions.
+* tidyverse
+```{r load libraries, message=FALSE, warning=FALSE}
+library(dlookr)
+library(flextable)
+library(tidyverse)
+library(boot)
+```
+
+
+### 2. Key terms
+ * Monte Carlo simulation
+ * base::replicate() repeated evaluation of an expression
+
+
+### 3. Useful Links & books
+
+ 
+### 4. Introduction
+Monte Carlo simulation is a vilely used method to evaluate the impact of uncertainty on a business decision. In a nutshell Monte Carlo simulation can be conducted in several steps:
+ 1. Define input factors
+ 2. Define probability distributions of the input factors
+ 3. Define function
+ 4. Define any restrictions
+ 5. Build the model
+ 6. Define evaluation criteria
+ 7. Run simulation
+ 8. Analyze output results
+The main idea of this method is that the single values of input variables used in business what-if analysis are replaced with probability distributions. Then this simulation is run many, many times producing output random variable with some probability distribution. The output variable is calculated using function defined in step 3. 
+Here is how Monte Carlo method is explained in a book "Business Analytics" (third edition) by Camm, Cochran, Fry and Ohlmann: 
+To evaluate a decision with a Monte Carlo simulation, an analyst identifies parameters
+that are not known with a high degree of certainty and treats these parameters as random, or uncertain, variables. 
+The values for the random variables are randomly generated from the specified probability distributions. The simulation model uses the randomly generated values of the random variables and the relationships between parameters and decisions to
+compute the corresponding values of an output. 
+Specifically, a simulation experiment produces a distribution of output values that correspond to the randomly generated values of the uncertain input variables. This probability distribution of the output values describes
+the range of possible outcomes, as well as the relative likelihood of each outcome. 
+After reviewing the simulation results, the analyst is often able to make decision recommendations
+for the controllable inputs that address not only the average output but also the variability of the output.
+A business user can include some input variable constraints as well.
+
+To better understand Monte Carlo let us consider a business example from the same book. 
+
+### 5. Profitability Analysis
+
+A star-up company wants to sell a new product. 
+The decision maker should be interested not only in the average, or expected, outcome, but also in information regarding the
+range of possible outcomes.
+The decision makers are interested in quantifying the likelihood and magnitude of an undesirable outcome.
+
+ Step 1: Define input factors 
+
+The decision makers have identified the key parameters in determining first-year profit: 
+selling price per unit: p, 
+first-year administrative and advertising costs: ca, 
+direct labor cost per unit: ci, 
+parts cost per unit: cp,
+first-year demand: d. 
+
+After conducting market research and a financial analysis, they estimate with a high
+level of certainty that product's selling price will be $249 per unit and that the first-year
+administrative and advertising costs will total $1,000,000.
+The management is not certain about selling price, direct labor cost and first-year demand
+
+ Step 2: Define probability distributions of the input factors
+
+Selling price, direct labor cost and first-year demand are three random variables with some probability distributions.
+A probability distribution describes the possible values of a random variable and the relative likelihood of the random variable taking on these values. The analyst can use historical data and knowledge of the random variable (range, mean, mode, and standard deviation) to specify the probability distribution for a random variable.
+
+The management researched the direct labor cost per unit, the parts cost per unit, and first-year demand to identify the
+respective probability distributions for these three random variables.
+They estimated that the direct labor cost will range from $43 to $47 per unit and is described by the discrete probability distribution:
+$43 - .1
+$44 - .2
+$45 - .4
+$46 - .2
+$47 - .1
+
+The management is confident that the parts cost will be between $80 and $100 per unit and can be described by a uniform probability distribution.
+
+Based on sales of comparable  devices, management also believes that first-year demand is described by the normal probability distribution with mean 15000 units and standard deviation 4500 units.
+
+Again all above are business assumptions based on historical statistical data and business knowledge.
+
+
+ Step 3. Define function
+
+The management is interested in estimating first year profitability.
+The formula to calculate this random output variable is:
+prof = (p - ci - cp)*d - ca
+
+
+ Step 5. Build the model
+ Let us build the model using R:
+
+
+```{r Monte Carlo}
+p <- 249      # selling price per unit
+ca <- 1000000 # first-year administrative and advertising costs
+runs <- 4000 # number of simulation runs
+
+# we will approximate discrete probability distribution of direct labor cost using uniform distribution
+# runif() function producing random numbers between 0 and 1:
+
+ci_dist_model <- function() {
+ci_dist <- runif(1)
+if( ci_dist >= 0 &  ci_dist < 0.1) {
+    ci <- 43 
+  } else if(ci_dist >= 0.1 &  ci_dist < 0.3 ) {
+    ci <- 44
+  } else if(ci_dist >= 0.3 &  ci_dist < 0.7 ) {
+    ci <- 45
+  } else if (ci_dist >= 0.7 &  ci_dist < 0.9 ) {
+    ci <- 46
+  } else if (ci_dist >= 0.9 &  ci_dist < 1 ) {
+    ci <- 47
+  }
+}
+
+# let's check if indeed ci is distributed as per business requirements:
+ci_dist_res <- replicate(runs,ci_dist_model())
+hist(ci_dist_res)
+
+# Let's create and run Monte Carlo simulation:
+
+model_mc <- function(){
+  cp <- runif(n = 1,min = 80, max = 100)   # parts cost per unit 
+  d <- rnorm(n = 1,mean = 15000,sd = 4500) # demand
+  ci <- ci_dist_model()
+  res <- (p - ci - cp)*d - ca
+}
+
+# 7. Run simulation
+
+prof <- replicate(runs,model_mc()) # we repeat simulation runs times
+```
+8. Analyze output results
+
+```{r}
+data.frame(prof) %>% dlookr::describe() %>% flextable::flextable()
+data.frame(prof) %>% ggplot(aes(x = prof, y = ..density..))+
+  geom_histogram(bins = 30,  fill = "#B3E4F7")+
+  geom_density(color = "red")
+```
+
+Using boot() function from boot package we can calculate 95% confidence interval of the mean:
+
+```{r}
+mean.ci <- function(x, indices) {
+return( mean( x[indices] ) )
+}
+
+prof.ci <- boot(prof,mean.ci,5000) # Note: the number of repetitions must be larger than the number of data rows.
+boot.ci(prof.ci)
+
+# t test:
+t.test(prof,mu = 721446)
+
+
+ggstatsplot::gghistostats(
+  data = data.frame(prof),
+  x = prof,
+  xlab = "Profit",
+  centrality.type = "p"
+)
+```
+
