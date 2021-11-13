@@ -28,6 +28,7 @@ knitr::opts_chunk$set(
 ```{r load libraries, message=FALSE, warning=FALSE}
 library(dlookr)
 library(flextable)
+library(ggstatsplot)
 library(tidyverse)
 library(boot)
 ```
