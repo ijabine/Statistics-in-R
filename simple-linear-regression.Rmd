@@ -1,0 +1,58 @@
+---
+title: "Simple Linear Regression"
+author: "Illarion Jabine"
+date: "1/22/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Library
+performance: Assessment of regression models performance.
+Utilities for computing measures to assess model quality,
+    which are not directly provided by R's 'base' or 'stats' packages.
+    These include e.g. measures like r-squared, intraclass correlation
+    coefficient, root mean squared error or functions to
+    check models for overdispersion, singularity or zero-inflation and
+    more. Functions apply to a large variety of regression models,
+    including generalized linear models, mixed effects models and Bayesian
+    models.
+
+### Generic functions for fitted linear model objects
+
+print() simple printed display
+summary() standard regression output
+coef() (or coefficients()) extracting the regression coefficients
+residuals() (or resid()) extracting residuals
+fitted() (or fitted.values()) extracting fitted values
+anova() comparison of nested models
+predict() predictions for new data
+plot() diagnostic plots
+confint() confidence intervals for the regression coefficients
+deviance() residual sum of squares
+vcov() (estimated) variance-covariance matrix
+logLik() log-likelihood (assuming normally distributed errors)
+AIC() information criteria including AIC, BIC/SBC (assuming normally distributed errors)
+
+```{r}
+library(performance)
+lm_model <- lm(mpg ~ qsec, data = mtcars)
+
+```
+
+summary() method returns the “summary.lm” object, quite similar to those of “lm” objects, but now contain the summary information; the adjusted R2, the full matrix of coefficients, standard errors, t statistics, and p values.
+```{r}
+lm_model_summary <- summary(lm_model)
+lm_model_summary$coefficients
+lm_model_summary$fstatistic
+```
+
+### Checking model fit using check_model() from performance package
+
+
+check_model() - Visual check of model various assumptions (normality of residuals, normality of random effects, linear relationship, homogeneity of variance, multicollinearity)
+```{r}
+check_model(lm_model)
+```
+
