@@ -1,0 +1,145 @@
+---
+title: "One sample t test"
+author: "Illarion Jabine"
+date: "01/02/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+To choose a right test a sequence of questions need to be asked.
+
+## 1. What type of data do you have?
+Before conducting a statistical hypothesis test you need to decide what type of data you have.
+
+1. Continuous data 
+Measures a characteristic of a part or process, such as length, weight, or temperature. The data often includes fractional values. 
+Example: A quality engineer wants to determine whether the mean weight differs from the value stated on the package label (300 g). The engineer samples boxes and records their weights.
+
+2. Attribute or categorical data
+Counts the presence of a characteristic or condition, such as a physical trait, a type of defect, or a rating, such as pass/fail. The count data are whole numbers. 
+
+Example: Managers at a bank want to know whether the proportion of customers who are interested in student loans is high enough (at least 5%) to warrant offering the service. They survey 3500 customers and count how many of them are interested in student loans. 
+
+## 2. What are you comparing?
+
+### 2.1 Compare one sample with a target 
+
+### 2.1.1 In case of continues data
+
+ 1. Mean vs. target
+Compare the mean of a process with a target value, such as an ideal goal, to determine whether they differ. Often used to evaluate whether a process is off center. 
+
+Example: An inspector measures a shipment of wheel rims and records their diameters. The inspector wants to determine whether the mean diameter of the rims equals the target diameter of 16 inches.
+
+Statistical test: 1 Sample t test
+
+ 2. Standard deviation vs. target
+Compare the standard deviation of a process with a target value, such as a benchmark, to determine whether they differ. Often used to evaluate how consistent a process is. 
+
+Example: A lumber distributor wants to analyze how consistently a sawmill produces beams of a particular length. The distributor measures a sample of beams to determine whether the standard deviation of the lengths is less than the maximum allowable value of 1 cm. 
+
+Statistical test: 1 sample standard deviation 
+
+### 2.1.2 In case of categorical data
+ 1. % Defective vs. target
+ Each item is classified into one of two categories, such as pass/fail or defective/nondefective. You count the number of defective items and compare the percentage of defectives with a target percentage. 
+
+ Example: Engineers examine a sample of bolts for severe cracks that make the bolts unusable. They record the number of bolts that are inspected and the number of bolts that are rejected. The engineers want to determine whether the percentage of defective bolts is less than 0.2%. 
+ 
+Statistical test: 1-Sample % Defective
+
+ 2. Percents in each outcome category vs. target
+ Each item is classified into one of three or more outcome categories, such as poor, fair, good, and excellent. You count the number of items in each category and compare the percentage in each category with its target percentage. 
+
+ Example: Analysts at a finance department sample overdue invoices and categorize them by the number of days that payment is overdue: 15 days or less, 16–30 days, or 31 days or more. They want to determine whether the percentage of overdue invoices in each category differs from its target percentage. 
+
+Statistical test: Chi-Square Goodness of fit
+
+### 2.2 Compare two samples with each other 
+
+### 2.2.1 In case of continues data
+What are you comparing?
+
+ 1. Two means
+Compare the means of two processes or two process conditions to determine whether the means differ. 
+
+Example: A quality analyst at a health management company wants to compare the overall satisfaction of patients from two different hospitals. The analyst calculates the satisfaction score for patients at each hospital to determine whether the mean satisfaction ratings differ. 
+
+What are you measuring?
+
+ a. Two different sets of items (independent)
+ Two different sets of items are measured, each under a different condition; therefore, the measurements for one sample are independent of the measurements in the other sample. 
+
+Example: A health management company wants to compare overall patient satisfaction ratings at two hospitals. Because the ratings are from two different groups of patients, the measurements are independent. 
+
+Statistical test: Independent 2 sample t test
+
+ b. Same or matched set of items (dependent)
+ The same set of items is measured under two different conditions; therefore, the two measurements for the same item are dependent, or related to each other. 
+
+Example: Quality engineers want to compare the force that is required to turn bearings with a coating and without a coating. Because the torque varies from bearing to bearing, they decide to measure the same bearing without a coating and then with a coating to make a more direct comparison. The measurements that they collect for each bearing are related and, therefore, dependent. 
+
+Statistical test: Paired t test
+
+2. Two standard deviations
+
+Compare the standard deviations of two processes or two process conditions to determine whether the variation differs. 
+
+Example: A lumber distributor wants to compare the variation of beam lengths that are cut by two different sawmills. The distributor measures the length of the beams from each sawmill to determine whether the consistency of the beam lengths differs.
+
+Statistical test: 2 Sample standard deviation 
+
+### 2.2.2 In case of categorical data
+What are you comparing?
+
+1. Two % defectives 
+Each item is classified into one of two categories, such as pass/fail or defective/nondefective. You count the number of defective items in each sample and compare the percentage of defectives between the two samples. 
+
+Example: Quality engineers at a delivery company count the number of mishandled packages in a sample of deliveries from the old process and in a sample of deliveries from the new process. They want to determine whether the percentage of mishandled packages differs for the two processes.
+
+Statistical test: 2 sample % defective
+
+2. Percents in each outcome category
+Each item is classified into one of three or more outcome categories, such as poor, fair, good, and excellent. You count the number of items in each category and compare the percentage in each category between the two samples. 
+
+Example: Analysts at a finance department sample overdue invoices and categorize them by the number of days that payment is overdue: 15 days or less, 16–30 days, or 31 days or more. They want to determine whether the percentage of overdue invoices in each category differs before and after they increase late fees. 
+
+Statistical test: Chi-Square Test for Association
+
+
+### 2.3 Compare more than 2 samples
+
+### 2.3.1 In case of continues data
+What are you comparing?
+
+ 1. More than two means 
+Compare the means of more than two processes or more than two process conditions to determine whether the means differ. 
+
+Example: Quality engineers want to determine whether paint hardness differs depending on the paint blend. They treat several metal test samples with one of four paint blends and then measure the hardness for each blend to determine whether the means differ. 
+
+Statistical test: One way ANOVA
+
+ 2. More than two standard deviations
+Compare the standard deviations of more than two processes or more than two process conditions to determine whether the variation differs. 
+
+Example: A lumber distributor wants to compare the variation of beams that are cut by three different sawmills. The distributor measures the length of the beams to determine whether the consistency of the beam lengths differs among the sawmills. 
+
+### 2.3.2 In case of categorical data
+What are you comparing?
+
+1. More than two % defectives 
+Each item is classified into one of two categories, such as pass/fail or defective/nondefective. You count the number of defective items in each sample and compare the percentage of defectives between the samples. 
+
+Engineers examine samples of bolts from four machines for severe cracks that make the bolts unusable. For each sample, the engineers record the number of bolts that are inspected and the number of bolts that are rejected. They want to determine whether the % defective differs for each machine. 
+
+Statistical test: Chi-Square % Defective Test
+
+2. Percents in each outcome category
+
+Each item is classified into one of three or more outcome categories, such as poor, fair, good, and excellent. You count the number of items in each category and compare the percentage in each category between the samples. 
+
+Analysts at a finance department sample overdue invoices and categorize them by the number of days that payment is overdue: 15 days or less, 16–30 days, or 31 days or more. They want to determine whether the percentage of overdue invoices in each category differs among four different sales regions. 
+
+Statistical test: Chi-Square Test for Association (The chi-square test for association determines whether the percentage of items in each outcome category is significantly different for two or more samples.)
