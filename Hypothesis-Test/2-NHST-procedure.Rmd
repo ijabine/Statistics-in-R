@@ -1,0 +1,81 @@
+---
+title: "template"
+author: "Illarion  Jabine"
+date: "01/02/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+### 1. Required packages:
+
+
+* ggstatsplot: 
+creates graphics with details from statistical tests included in the plots themselves. 
+It provides an easier syntax to generate information-rich plots for statistical analysis of continuous (violin plots, scatterplots, histograms, dot plots, dot-and-whisker plots) or categorical (pie and bar charts) data. 
+Currently, it supports the most common types of statistical approaches and tests: parametric, nonparametric, robust, and Bayesian versions of t-test/ANOVA, correlation analyses, contingency table analysis, meta-analysis, and regression analyses.
+
+* ggpubr:
+easy-to-use functions for creating and customizing 'ggplot2'- based publication ready plots.
+
+```{r load libraries, message=FALSE, warning=FALSE}
+library(ggstatsplot)
+library(ggpubr)
+```
+
+
+### 2. Key terms
+ * NHST
+
+### 3. Useful Links & books
+Statistics for the Social Sciences (A General Linear Model Approach) Russell T. Warne
+
+### 4. Check assumptions
+
+Check whether the data are normally distributed:
+ 1. Shapiro-Wilk normality test, where p-value > 0.05 would mean normally distributed data
+ 2. Quantile-Quantile plot, ggqqplot() function from ggpubr package. All points inside gray area mean normally distributed data.
+ 
+### 5. Null hypothesis statistical test (NHST) procedure
+
+1. Form Groups in the Data
+ The first step of NHST is to form groups in the data. For one sample t test the groups are always (1) the sample and (2) the population.
+
+2. Define the null hypothesis.
+The second step in performing a NHST is to define the null hypothesis, which is the hypothesis that an NHST is designed to test. The null hypothesis in a one sample t-test states that there is no difference between the sample and the population (which are always the two groups in a t-test). The null
+hypothesis is important because it is this belief – that the two groups do not differ in their means –
+that is tested.
+
+3. Set Alpha.
+Alpha is the size of the rejection region. Alpha is the proportion of the area in the normal or t distribution distribution that is inside the rejection region. It is a probability for a type 1 error to occure. The default alpha = .05.
+
+4. Choose a One-Tailed or a Two-Tailed Test.
+The decision of whether to conduct a one- or a two-tailed test is determined by whether the
+researcher has any previous research or theory about what results they can expect from the NHST. The advantage of a one-tailed test is that it makes it easier to reject the null hypothesis. 
+The determination of a one- or two-tailed test also helps researchers decide their alternative hypothesis. 
+The alternative hypothesis is the hypothesis that the data support if the null hypothesis is rejected. If researchers reject the null hypothesis, then the alternative hypothesis is what they will believe instead.
+
+5. Find the Critical Value.
+The critical value is used to define the rejection region.
+The critical value is the point at which the rejection region begins; everything within the tail beyond the critical value is in the rejection region.
+
+6. Calculate the Observed Value.
+During this step we calculate observed statistics (mean, median, variance, etc).
+
+7. Compare the Observed Value and the Critical Value.
+If the observed value is inside the rejection region, the researcher should reject the null hypothesis. 
+If the observed value is outside the rejection region, the researcher should retain the null hypothesis.
+
+8. Calculate an Effect Size.
+The previous seven steps of NHST are useful for producing a yes or no answer on whether the null hypothesis is a good statistical model for the data.
+It would be far more useful to learn how different the sample is from the population. To get this information, it is necessary to calculate an effect size.
+An effect size is a statistic that quantifies the degree to which the null hypothesis is wrong.
