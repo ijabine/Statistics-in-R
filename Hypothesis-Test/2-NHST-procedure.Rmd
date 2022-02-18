@@ -40,10 +40,11 @@ library(ggpubr)
 Statistics for the Social Sciences (A General Linear Model Approach) Russell T. Warne
 
 ### 4. Check assumptions
-
-Check whether the data are normally distributed:
- 1. Shapiro-Wilk normality test, where p-value > 0.05 would mean normally distributed data
- 2. Quantile-Quantile plot, ggqqplot() function from ggpubr package. All points inside gray area mean normally distributed data.
+  1. Independence of observations (i.i.d.) - independent and identically distributed. The observations are not related (for example no autocorrelation)
+  2. Homogeneity of variance: the variance within each group being compared is similar among all groups
+  3. Check whether the data are normally distributed:
+    3.1 Shapiro-Wilk normality test, where p-value > 0.05 would mean normally distributed data
+    3.2 Quantile-Quantile plot, ggqqplot() function from ggpubr package. All points inside gray area mean normally distributed data.
  
 ### 5. Null hypothesis statistical test (NHST) procedure
 
