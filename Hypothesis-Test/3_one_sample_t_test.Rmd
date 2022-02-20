@@ -1,0 +1,159 @@
+---
+title: "1 sample t test"
+author: "Illarion  Jabine"
+date: "12/02/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+### 1. Required packages:
+
+
+* ggstatsplot: 
+creates graphics with details from statistical tests included in the plots themselves. 
+It provides an easier syntax to generate information-rich plots for statistical analysis of continuous (violin plots, scatterplots, histograms, dot plots, dot-and-whisker plots) or categorical (pie and bar charts) data. 
+Currently, it supports the most common types of statistical approaches and tests: parametric, nonparametric, robust, and Bayesian versions of t-test/ANOVA, correlation analyses, contingency table analysis, meta-analysis, and regression analyses.
+
+* ggpubr:
+easy-to-use functions for creating and customizing 'ggplot2'- based publication ready plots.
+* tidyverse
+```{r load libraries, message=FALSE, warning=FALSE}
+library(ggstatsplot)
+library(ggpubr)
+library(tidyverse)
+```
+
+
+### 2. Key terms and links
+ * NHST
+ https://libguides.library.kent.edu/SPSS/OneSampletTest
+ http://www.sthda.com/english/wiki/one-sample-t-test-in-r
+ https://yuzar-blog.netlify.app/posts/2021-12-20-one-sample-t-test-do-your-results-make-sense-or-how-to-compare-your-work-to-the-work-of-others/
+
+### 3. The purpose of the test
+One sample t test examines whether the mean of a population is statistically different from a known or hypothesized value. One sample t test is used to test statistical difference between a mean and a known or hypothesized value of the mean in the population. 
+The test variable's mean is compared against a "test value", which is a known or hypothesized value of the mean in the population. 
+Example: a machine is supposed to fill in bottles with 100 ml. A random sample is tested to check that the machine is not under- or over-filling the bottles.
+One sample t test can only compare a single sample mean to a specified constant. It can not compare sample means between two or more groups. 
+
+### 4. Check assumptions
+Your data must meet the following requirements (from https://libguides.library.kent.edu/SPSS/OneSampletTest):
+a. Test variable that is continuous (i.e., interval or ratio level)
+b. Scores on the test variable are independent (i.e., independence of observations)
+   * There is no relationship between scores on the test variable
+   * Violation of this assumption will yield an inaccurate p value
+c. Random sample of data from the population
+d. Normal distribution (approximately) of the sample and population on the test variable
+   * Non-normal population distributions, especially those that are thick-tailed or heavily skewed, considerably reduce the power of the test
+   * Among moderate or large samples, a violation of normality may still yield accurate p values
+e. Homogeneity of variances (i.e., variances approximately equal in both the sample and population)
+f. No outliers
+  1. Independence of observations (i.i.d.) - independent and identically distributed. The observations are not related (for example no autocorrelation)
+  2. Homogeneity of variance: the variance within each group being compared is similar among all groups
+  3. Check whether the data are normally distributed:
+    3.1 Shapiro-Wilk normality test, where p-value > 0.05 would mean normally distributed data.
+    Null hypothesis: the data are normally distributed
+    Alternative hypothesis: the data are not normally distributed
+Let's use iris data set for our one sample t test
+```{r}
+x <- unlist(subset(iris,Species == "virginica", select = Sepal.Width))
+shapiro.test(x)
+
+```
+We fail to reject the null hypothesis.
+    
+    3.2 Quantile-Quantile plot, ggqqplot() function from ggpubr package. All points inside gray area mean normally distributed data.
+```{r}
+ggqqplot(x)
+
+hist(x)
+boxplot(x)
+summary(x)
+```
+Our data is normally distributed, so the mean is a good representative for our sample. In this case we can use one sample t test. 
+However if data are not normally distrubuted, then we choose a non-parametric one-sample Wilcoxon test which uses median as a test statistics.
+ 
+### 5. Null hypothesis statistical test (NHST) procedure
+
+Russell T. Warne suggest the following procedure:
+1. Form groups in the data:
+ There is a sample group and population.
+ 
+2. Define the null hypothesis (H0). The null hypothesis is always that there is no difference between groups or that there is no relationship between independent and dependent variables:
+
+For one sample t test:
+H0: µ =  µ0  ("the population mean is equal to the [proposed] population mean")
+H1: µ ≠  µ0  ("the population mean is not equal to the [proposed] population mean")
+From the past research and after reviewing some articles on sepal width of virginica iris we set the null hypothesis that the mean length is 4 inches. 
+So, we collected the samples to test H0.
+```{r}
+mu <- 4
+```
+
+
+3. Set alpha (α). The default alpha = .05.
+```{r}
+alfa <- 0.05
+```
+
+4. Choose a one-tailed or a two-tailed test. This determines the alternative hypothesis (H1).
+From the prior research let us take two-tailed test.
+
+5. Find the critical value, which is used to define the rejection region.
+```{r}
+t_critical <- qt(alfa/2,df = length(x)-1)
+```
+
+6. Calculate the observed value.
+For one sample t test the observed value is calculated as follows:
+ t = (mean(x)-mu)/(sd(x)/sqrt(n))
+ mean(x) - Sample mean
+ mu - The test value -- the proposed constant for the population mean
+ (sd(x)/sqrt(n)) - Estimated standard error of the mean
+ sd(x) - Sample standard deviation
+```{r}
+t_calc <- (mean(x)-mu)/(sd(x)/sqrt(length(x)))
+```
+
+7. Compare the observed value and the critical value. 
+The calculated t value is then compared to the critical t value from the t distribution table with degrees of freedom df = n - 1 and chosen confidence level. If the calculated t value > critical t value, then we reject the null hypothesis. If the observed value is more extreme than the critical value, 
+then the null hypothesis should be rejected. Otherwise, it should be retained.
+
+We can see that t_calc is greater (in absolute terms) than t_critical.
+Hence, we reject H0 that the mean length is 4 inches.
+
+8. Calculate an effect size.
+
+### 6. One sample t test in R
+We can do one sample t test using t.test() base R:
+```{r}
+t.test(x,alternative = "two.sided",mu = mu)
+```
+Let us test another H0 that mu = 3:
+```{r}
+t.test(x,alternative = "two.sided",mu = 3)
+```
+We can not reject this H0.
+
+We can use gghistostats() from ggstatsplot package:
+```{r}
+gghistostats(
+    data       = iris %>% filter(Species == "virginica"),
+    x          = Sepal.Width,
+    test.value = mu,
+    type       = "parametric", 
+    normal.curve = TRUE
+    )
+```
+
+
