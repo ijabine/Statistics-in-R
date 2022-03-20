@@ -1,0 +1,146 @@
+---
+title: "2 sample independent t test"
+author: "Illarion  Jabine"
+date: "6/03/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+### 1. Required packages:
+
+
+* ggstatsplot: 
+creates graphics with details from statistical tests included in the plots themselves. 
+It provides an easier syntax to generate information-rich plots for statistical analysis of continuous (violin plots, scatterplots, histograms, dot plots, dot-and-whisker plots) or categorical (pie and bar charts) data. 
+Currently, it supports the most common types of statistical approaches and tests: parametric, nonparametric, robust, and Bayesian versions of t-test/ANOVA, correlation analyses, contingency table analysis, meta-analysis, and regression analyses.
+
+* ggpubr:
+easy-to-use functions for creating and customizing 'ggplot2'- based publication ready plots.
+* tidyverse
+* gapmider - Data from Gapminder
+```{r load libraries, message=FALSE, warning=FALSE}
+library(ggstatsplot)
+library(ggpubr)
+library(tidyverse)
+library(gapminder)
+```
+
+
+### 2. Key terms and links
+ http://www.sthda.com/english/wiki/comparing-means-in-r
+ http://www.sthda.com/english/wiki/unpaired-two-samples-t-test-in-r
+ https://www.datanovia.com/en/lessons/how-to-do-a-t-test-in-r-calculation-and-reporting/how-to-do-two-sample-t-test-in-r/
+ https://indrajeetpatil.github.io/ggstatsplot/articles/web_only/ggbetweenstats.html
+
+### 3. The purpose of the test
+Two sample unpaired t test examines whether the means of two independent groups are different. 
+Example: Two groups of people are randomly selected. One group of people is given a treatment whereas the other is not. Compare if there is a significant difference between two groups by comparing the means of two independent groups.
+
+### 4. Check assumptions
+Your data must meet the following requirements:
+
+a. Test variable that is continuous (i.e., interval or ratio level)
+b. Scores on the test variable are independent (i.e., independence of observations)
+   * There is no relationship between scores on the test variable
+   Independence of observations (i.i.d.) - independent and identically distributed. The observations are not related (for example no autocorrelation)
+   * Violation of this assumption will yield an inaccurate p value
+c. Random sample of data from the population
+
+### d. Two groups are normaly distributed (approximately). 
+
+Remember we are comparing the means, so if groups are heavenly skewed, the mean is not a good statistics.
+   * Non-normal distributions, especially those that are thick-tailed or heavily skewed, considerably reduce the power of the test
+   * Among moderate or large samples, a violation of normality may still yield accurate p values
+   Check whether the data are normally distributed:
+     Shapiro-Wilk normality test, where p-value > 0.05 would mean normally distributed data.
+     Null hypothesis: the data are normally distributed
+     Alternative hypothesis: the data are not normally distributed
+Let's use iris data set for our one sample t test
+```{r}
+
+df <- iris %>% filter(Species %in% c("setosa","versicolor")) %>% select(Species,Sepal.Width)
+
+# Let us check normality assumption
+shapiro.test(df$Sepal.Width[df$Species=="setosa"])
+shapiro.test(df$Sepal.Width[df$Species=="versicolor"])
+
+```
+We fail to reject the null hypothesis. The data are normally distributed.
+```{r}
+boxplot(Sepal.Width~Species,data = df)
+
+```
+Our data is normally distributed, so the mean is a good representative for our sample. In this case we can use one sample t test. 
+However if data are not normally distrubuted, then we choose a non-parametric Welch t-test.
+
+### e. The variances of the two groups are equal
+Homoscedasticity, can be checked using F-test)
+Let us check if two populations have the same variances:
+```{r}
+var.test(Sepal.Width~Species,data = df)
+```
+The p-value of F-test is p = 0.1895. It’s greater than the significance level alpha = 0.05. Therefore, there is no significant difference between the variances of the two sets of data. We can use the classic t-test.
+
+ 
+### 5. Null hypothesis statistical test (NHST) procedure
+
+Russell T. Warne suggest the following procedure:
+1. Form groups in the data:
+In our df dataframe we have two species of flowers.
+
+
+2. Define the null hypothesis (H0). The null hypothesis is always that there is no difference between groups or that there is no relationship between independent and dependent variables:
+H0:mA=mB 
+H0:mA≤mB
+H0:mA≥mB
+The corresponding alternative hypotheses (Ha) are as follow:
+
+Ha:mA≠mB (different)
+Ha:mA>mB (greater)
+Ha:mA<mB (less)
+From the past research and after reviewing some articles on sepal width of virginica iris we set the null hypothesis that the mean length is 4 inches. 
+
+3. Set alpha (α). The default alpha = .05.
+```{r}
+alfa <- 0.05
+```
+
+4. Choose a one-tailed or a two-tailed test. This determines the alternative hypothesis (H1).
+From the prior research let us take two-tailed test.
+
+
+### 6. Two sample independent t test in R
+We can do two sample independent t test using t.test() from base R:
+```{r}
+t.test(Sepal.Width~Species,var.equal = TRUE, paired = FALSE,data = df)
+
+```
+### 7. Interpretation of the result
+
+The p-value of the test is 1.845e-15, which is much less than the significance level alpha = 0.05. We can conclude that setosa’s average Sepal.Width is significantly different from versicolor’s average Sepal.Width with a p-value = 1.845e-15.
+
+We can use ggbetweenstats() from ggstatsplot package.
+
+https://indrajeetpatil.github.io/ggstatsplot/articles/web_only/ggbetweenstats.html
+
+The function automatically decides whether an independent samples t-test is preferred (for 2 groups) or a Oneway ANOVA (3 or more groups). based on the number of levels in the grouping variable.
+
+```{r}
+ ggbetweenstats(
+  data = df,
+  x = Species,
+  y = Sepal.Width,
+  var.equal = TRUE)
+```
+var.equal - a logical variable indicating whether to treat the two variances as being equal. If TRUE then the pooled variance is used to estimate the variance otherwise the Welch (or Satterthwaite) approximation to the degrees of freedom is used.
+
