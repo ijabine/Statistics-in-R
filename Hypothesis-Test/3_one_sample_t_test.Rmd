@@ -39,7 +39,7 @@ library(tidyverse)
  https://libguides.library.kent.edu/SPSS/OneSampletTest
  http://www.sthda.com/english/wiki/one-sample-t-test-in-r
  https://yuzar-blog.netlify.app/posts/2021-12-20-one-sample-t-test-do-your-results-make-sense-or-how-to-compare-your-work-to-the-work-of-others/
-
+ https://indrajeetpatil.github.io/ggstatsplot/articles/web_only/gghistostats.html
 ### 3. The purpose of the test
 One sample t test examines whether the mean of a population is statistically different from a known or hypothesized value. One sample t test is used to test statistical difference between a mean and a known or hypothesized value of the mean in the population. 
 The test variable's mean is compared against a "test value", which is a known or hypothesized value of the mean in the population. 
@@ -145,7 +145,8 @@ t.test(x,alternative = "two.sided",mu = 3)
 ```
 We can not reject this H0.
 
-We can use gghistostats() from ggstatsplot package:
+We can use gghistostats() from ggstatsplot package.
+Let's test the hypothesis that our sample mean is the same as our population mean of 3 using a parametric one sample t-test (type = "p"):
 ```{r}
 gghistostats(
     data       = iris %>% filter(Species == "virginica"),
