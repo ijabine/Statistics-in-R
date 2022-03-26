@@ -55,7 +55,7 @@ b. Scores on the test variable are independent (i.e., independence of observatio
    * There is no relationship between scores on the test variable
    Independence of observations (i.i.d.) - independent and identically distributed. The observations are not related (for example no autocorrelation)
    * Violation of this assumption will yield an inaccurate p value
-c. Random sample of data from the population
+c. Random sample of data from the population. The samples should be large enough to determine, with reasonable certainty, whether the mean is significantly different under the two conditions.
 
 ### d. The paired differences do not need to be normally distributed if the sample sizes are at least 20.
  Although the test is based on the assumption that the paired differences are normally distributed, this assumption is not critical when the sample sizes are at least 20. 
