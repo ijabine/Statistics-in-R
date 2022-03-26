@@ -57,29 +57,11 @@ b. Scores on the test variable are independent (i.e., independence of observatio
    * Violation of this assumption will yield an inaccurate p value
 c. Random sample of data from the population
 
-### d. The group is normaly distributed (approximately). 
-
-Remember we are comparing the means, so if groups are heavenly skewed, the mean is not a good statistics.
-   * Non-normal distributions, especially those that are thick-tailed or heavily skewed, considerably reduce the power of the test
-   * Among moderate or large samples, a violation of normality may still yield accurate p values
-   Check whether the data are normally distributed:
-     Shapiro-Wilk normality test, where p-value > 0.05 would mean normally distributed data.
-     Null hypothesis: the data are normally distributed
-     Alternative hypothesis: the data are not normally distributed
+### d. The paired differences do not need to be normally distributed if the sample sizes are at least 20.
+ Although the test is based on the assumption that the paired differences are normally distributed, this assumption is not critical when the sample sizes are at least 20. 
+ If they are less than 20 and the paired differences are not normally distributed, the p-value may be inaccurate and you should interpret the results with caution. 
+ 
 Let's use mice2 data set from datarium package
-```{r}
-data("mice2", package = "datarium")
-
-
-# Let us check normality assumption
-shapiro.test(mice2$before)
-shapiro.test(mice2$after)
-
-```
-
-Our data is normally distributed, so the mean is a good representative for our sample. In this case we can use one sample t test. 
-However if data are not normally distrubuted, then we choose a non-parametric Welch t-test.
-
 
 ### 5. Null hypothesis statistical test (NHST) procedure
 
