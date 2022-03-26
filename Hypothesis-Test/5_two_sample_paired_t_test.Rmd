@@ -1,0 +1,140 @@
+---
+title: "2 sample paired (dependent) t test"
+author: "Illarion  Jabine"
+date: "26/03/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+### 1. Required packages:
+
+
+* ggstatsplot: 
+creates graphics with details from statistical tests included in the plots themselves. 
+It provides an easier syntax to generate information-rich plots for statistical analysis of continuous (violin plots, scatterplots, histograms, dot plots, dot-and-whisker plots) or categorical (pie and bar charts) data. 
+Currently, it supports the most common types of statistical approaches and tests: parametric, nonparametric, robust, and Bayesian versions of t-test/ANOVA, correlation analyses, contingency table analysis, meta-analysis, and regression analyses.
+
+* ggpubr:
+easy-to-use functions for creating and customizing 'ggplot2'- based publication ready plots.
+* tidyverse
+* datarium - contains required data sets
+```{r load libraries, message=FALSE, warning=FALSE}
+library(ggstatsplot)
+library(ggpubr)
+library(tidyverse)
+library(datarium)
+```
+
+
+### 2. Key terms and links
+ https://en.wikipedia.org/wiki/Repeated_measures_design
+ http://www.sthda.com/english/wiki/comparing-means-in-r
+ http://www.sthda.com/english/wiki/paired-samples-t-test-in-r
+ https://indrajeetpatil.github.io/ggstatsplot/
+ https://www.datanovia.com/en/lessons/how-to-do-a-t-test-in-r-calculation-and-reporting/how-to-do-paired-t-test-in-r/
+
+### 3. The purpose of the test
+Two sample paired t test examines whether the means of two dependent or related groups are different. 
+Example: A group of people is given a treatment during 1 month. We want to know if a parameter of a group (normaly a mean value) of the same (very important!) group before treatment is different than after the treatment. We compare the same group before and after. This is an important assumption in order to use this test, i.e. two samples must be paired (related or linked).
+
+### 4. Check assumptions
+Your data must meet the following requirements:
+
+a. Test variable that is continuous (i.e., interval or ratio level)
+b. Scores on the test variable are independent (i.e., independence of observations)
+   * There is no relationship between scores on the test variable
+   Independence of observations (i.i.d.) - independent and identically distributed. The observations are not related (for example no autocorrelation)
+   * Violation of this assumption will yield an inaccurate p value
+c. Random sample of data from the population
+
+### d. The group is normaly distributed (approximately). 
+
+Remember we are comparing the means, so if groups are heavenly skewed, the mean is not a good statistics.
+   * Non-normal distributions, especially those that are thick-tailed or heavily skewed, considerably reduce the power of the test
+   * Among moderate or large samples, a violation of normality may still yield accurate p values
+   Check whether the data are normally distributed:
+     Shapiro-Wilk normality test, where p-value > 0.05 would mean normally distributed data.
+     Null hypothesis: the data are normally distributed
+     Alternative hypothesis: the data are not normally distributed
+Let's use mice2 data set from datarium package
+```{r}
+data("mice2", package = "datarium")
+
+
+# Let us check normality assumption
+shapiro.test(mice2$before)
+shapiro.test(mice2$after)
+
+```
+
+Our data is normally distributed, so the mean is a good representative for our sample. In this case we can use one sample t test. 
+However if data are not normally distrubuted, then we choose a non-parametric Welch t-test.
+
+
+### 5. Null hypothesis statistical test (NHST) procedure
+
+Paired t-test analysis is performed as follow:
+
+Calculate the difference (d) between each pair of value
+Compute the mean (m) and the standard deviation (s) of d
+Compare the average difference to 0. If there is any significant difference between the two pairs of samples, then the mean of d (m) is expected to be far from 0.
+
+3. Set alpha (α). The default alpha = .05.
+```{r}
+alfa <- 0.05
+```
+
+4. Choose a one-tailed or a two-tailed test. This determines the alternative hypothesis (H1).
+From the prior research let us take two-tailed test.
+
+
+### 6. Two sample repeated t test in R
+We can do two sample independent t test using t.test() from base R.
+You have to specify parameter paired = TRUE:
+```{r}
+before <- mice2$before
+after <- mice2$after
+t.test(before,after,paired = TRUE)
+
+```
+### 7. Interpretation of the result
+t is the t-test statistic value (t = -25.55),
+df is the degrees of freedom (df= 9),
+p-value is the significance level of the t-test (p-value = 1.039e-09).
+conf.int is the confidence interval of the mean of the differences at 95% (conf.int = [-217.1442, -181.8158]);
+sample estimates is the mean of the differences (mean = -199.48).
+
+The p-value of the test is 1.039e-09, which is much less than the significance level alpha = 0.05. We can then reject null hypothesis and conclude that the average weight of the mice before treatment is significantly different from the average weight after treatment.
+
+We can use ggwithinstats() from ggstatsplot package.
+
+https://indrajeetpatil.github.io/ggstatsplot/articles/web_only/ggwithinstats.html
+
+The function automatically decides whether a repeated sample t-test is preferred (for 2 groups) or a Oneway ANOVA (3 or more groups). based on the number of levels in the grouping variable.
+To use ggwithinstats() we need to convert our mice2 data set into long format.
+```{r}
+mice2.long <- mice2 %>%
+  gather(key = "group", value = "weight", before, after)
+
+# t.test using formula
+t.test(weight~group,data = mice2.long, paired = TRUE)
+```
+
+
+```{r}
+ ggwithinstats(
+  data = mice2.long,
+  x = group,
+  y = weight)
+```
+
