@@ -24,13 +24,12 @@ creates graphics with details from statistical tests included in the plots thems
 It provides an easier syntax to generate information-rich plots for statistical analysis of continuous (violin plots, scatterplots, histograms, dot plots, dot-and-whisker plots) or categorical (pie and bar charts) data. 
 Currently, it supports the most common types of statistical approaches and tests: parametric, nonparametric, robust, and Bayesian versions of t-test/ANOVA, correlation analyses, contingency table analysis, meta-analysis, and regression analyses.
 
-* ggpubr:
-easy-to-use functions for creating and customizing 'ggplot2'- based publication ready plots.
+* PairedData: set of graphics (based on ggplot2), statistics, effect sizes and hypothesis tests for analyzes of paired data with S4 class
 * tidyverse
 * datarium - contains required data sets
 ```{r load libraries, message=FALSE, warning=FALSE}
 library(ggstatsplot)
-library(ggpubr)
+library(PairedData)
 library(tidyverse)
 library(datarium)
 ```
@@ -55,7 +54,7 @@ b. Scores on the test variable are independent (i.e., independence of observatio
    * There is no relationship between scores on the test variable
    Independence of observations (i.i.d.) - independent and identically distributed. The observations are not related (for example no autocorrelation)
    * Violation of this assumption will yield an inaccurate p value
-c. Random sample of data from the population. The samples should be large enough to determine, with reasonable certainty, whether the mean is significantly different under the two conditions.
+c. Random sample of data from the population
 
 ### d. The paired differences do not need to be normally distributed if the sample sizes are at least 20.
  Although the test is based on the assumption that the paired differences are normally distributed, this assumption is not critical when the sample sizes are at least 20. 
@@ -89,6 +88,8 @@ after <- mice2$after
 t.test(before,after,paired = TRUE)
 
 ```
+
+
 ### 7. Interpretation of the result
 t is the t-test statistic value (t = -25.55),
 df is the degrees of freedom (df= 9),
@@ -120,3 +121,12 @@ t.test(weight~group,data = mice2.long, paired = TRUE)
   y = weight)
 ```
 
+Using PairedData package:
+
+```{r}
+
+# Plot paired data
+
+p <- paired(before, after)
+plot(p, type = "profile") + theme_bw()
+```
