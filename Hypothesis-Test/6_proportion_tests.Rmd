@@ -93,7 +93,7 @@ Calculated p value is less than 0.05 => we reject H0. There is enough evidence t
 
 
 
-### 3.1.2 One proportion test (three or more outcome categories)
+### 3.1.2 One sample proportion test (three or more outcome categories)
 
 Percents in each outcome category vs. target
 chi-square goodness of fit test is used to compare the observed distribution to an expected distribution, in a situation where we have three or more categories in a discrete data. In other words, it compares multiple observed proportions to expected probabilities.
@@ -123,6 +123,8 @@ The research question is: We want to know,if there is any significant difference
 
 Statistical test to use in R: chisq.test() - Chi-Square Goodness-of-fit test
 URL: http://www.sthda.com/english/wiki/chi-square-goodness-of-fit-test-in-r
+     https://www.r-bloggers.com/2015/01/goodness-of-fit-test-in-r/
+    https://indrajeetpatil.github.io/ggstatsplot/articles/web_only/ggpiestats.html#goodness-of-fit-with-ggpiestats
 
 ```{r}
 invoices <- c(40,40,20)
@@ -149,8 +151,39 @@ URL: http://www.sthda.com/english/wiki/two-proportions-z-test-in-r
 
 Statistical test to use in R: prop.test()
 
+Example using R (example from "STATISTICS FOR BUSINESS AND ECONOMICS" by Anderson):
+A tax preparation firm is interested in comparing the quality of work at two of its regional
+offices. By randomly selecting samples of tax returns prepared at each office and verifying
+the sample returns’ accuracy, the firm will be able to estimate the proportion of
+erroneous returns prepared at each office. Of particular interest is the difference between
+these proportions.
+Independent simple random samples from the two offices provide the following information:
+Office 1
+n1 = 250
+Number of returns with errors = 35
 
-### 3.2.2 Two proportion test (three or more outcome categories)
+Office 2
+n2 = 300
+Number of returns with errors = 27
+
+Research question is:
+Whether the observed proportion of returns with errors in Office 1 (p1) is equal to the observed proportion of returns with errors in Office 2 (p2)?
+It's two.sided alternative hypothesis.
+
+```{r}
+# x = c(35,27): a vector of counts of successes, i.e. returns with errors
+# n = c(250, 300): a vector of counts of trials
+
+prop.test(x = c(35,27), n = c(250, 300),conf.level = 0.9,correct = FALSE,alternative = "two.sided")
+
+
+```
+Conclusion: 
+With the p-value less than α = .10,
+H0 is rejected at the .10 level of significance. The firm can conclude that the error rates differ between the two offices.
+As an additional check, 0 is not included into the interval estimate of the difference between the population error rates: 0.004815898 0.095184102
+
+### 3.2.2 Two sample proportion test (three or more outcome categories)
 
 Source (minitab)
 Percents in each outcome category
@@ -165,7 +198,9 @@ https://libguides.library.kent.edu/SPSS/ChiSquare
 
 Statistical test to use in R: chisq.test() - Chi-Square Test of Independence (aka Chi-Square Test for Association)
 
-## 3.3 Three or more proportion tests (compare more than two samples)
+
+
+## 3.3 Three or more population proportion tests (compare more than two samples)
 
 ### 3.3.1 Three or more proportion tests (compare three or more samples with each other, binary proportion)
 
