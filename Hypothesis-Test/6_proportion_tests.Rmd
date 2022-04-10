@@ -33,8 +33,7 @@ library(tidyverse)
 # 2. Key terms and links
 http://www.sthda.com/english/wiki/comparing-proportions-in-r
 https://indrajeetpatil.github.io/ggstatsplot/reference/ggbarstats.html
-
-
+To combine bar or pie charts with proportion tests use ggbarstats() from ggstatsplot package.
 # 3. Types of the test of proportions
 We have to destinguish several types of proportion tests.
 
@@ -183,6 +182,24 @@ With the p-value less than α = .10,
 H0 is rejected at the .10 level of significance. The firm can conclude that the error rates differ between the two offices.
 As an additional check, 0 is not included into the interval estimate of the difference between the population error rates: 0.004815898 0.095184102
 
+chisq.test() function can also be used when there are two levels of proportions.
+It will give exactly the same result as prop.test().
+
+```{r}
+# file is in Data folder
+df <- read.csv("LungCapData.csv",sep = ",")
+
+# create a contingency table:
+tab <- table(Gender,Smoke)
+
+# chisq.test()
+chi_test <- chisq.test(tab)
+
+prop_test <- prop.test(tab)
+
+```
+
+
 ### 3.2.2 Two sample proportion test (three or more outcome categories)
 
 Source (minitab)
@@ -245,5 +262,22 @@ Each item is classified into one of three or more outcome categories, such as po
 Example:
 Analysts at a finance department sample overdue invoices and categorize them by the number of days that payment is overdue: 15 days or less, 16–30 days, or 31 days or more. They want to determine whether the percentage of overdue invoices in each category differs among four different sales regions.
 
+Statistical test to use in R: chisq.test() - Chi-Square Test of Independence (aka Chi-Square Test for Association)
+
+We can use ggbarstats() to show nice bar charts and produce association test (or contingency table analysis).
+https://indrajeetpatil.github.io/ggstatsplot/reference/ggbarstats.html
+
+```{r}
+set.seed(123)
+library(ggstatsplot)
+ggbarstats(mtcars, x = vs, y = cyl,paired = FALSE)
+
+# Create two way table
+tab1 <- table(mtcars$vs,mtcars$cyl)
+
+# Run Pearson's chi-square test
+chisq.test(tab1)
+
+```
 
 
