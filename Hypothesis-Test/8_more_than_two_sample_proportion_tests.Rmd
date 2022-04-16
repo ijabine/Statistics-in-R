@@ -1,0 +1,113 @@
+---
+title: "More than two sample proportion tests"
+author: "Illarion  Jabine"
+date: "02/04/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+# 1. Required packages:
+
+
+* ggstatsplot: 
+creates graphics with details from statistical tests included in the plots themselves. 
+It provides an easier syntax to generate information-rich plots for statistical analysis of continuous (violin plots, scatterplots, histograms, dot plots, dot-and-whisker plots) or categorical (pie and bar charts) data. 
+Currently, it supports the most common types of statistical approaches and tests: parametric, nonparametric, robust, and Bayesian versions of t-test/ANOVA, correlation analyses, contingency table analysis, meta-analysis, and regression analyses.
+
+```{r load libraries, message=FALSE, warning=FALSE}
+library(ggstatsplot)
+library(tidyverse)
+```
+
+
+# 2. Key terms and links
+http://www.sthda.com/english/wiki/comparing-proportions-in-r
+https://indrajeetpatil.github.io/ggstatsplot/reference/ggbarstats.html
+To combine bar or pie charts with proportion tests use ggbarstats() from ggstatsplot package.
+# 3. Types of the test of proportions
+We have to distinguish several types of proportion tests:
+ 1. One sample proportion test (compare one sample with a target):
+     Binary outcome categories
+     Three or more outcome categories
+ 2. Two sample proportion tests (compare two samples with each other):
+    Binary outcome categories
+    Three or more outcome categories
+ 3. Three or more population proportion tests (compare more than two samples):
+    Binary outcome categories
+    Three or more outcome categories     
+
+
+## 3.3 Three or more population proportion tests (compare more than two samples)
+
+### 3.3.1 Three or more proportion tests (compare three or more samples with each other, binary proportion)
+
+For this type of proportion tests Chi-Square Test is used.
+
+Source (minitab)
+More than two % defectives
+The chi-square % defective test determines whether the percentage of defective items is significantly different among more than two samples. 
+Each item is classified into one of two categories, such as pass/fail or defective/nondefective. You count the number of defective items in each sample and compare the percentage of defectives between the samples. 
+This test is used to determine whether the % defective for three or more processes or process conditions differs. To collect data, you could take samples from the same process under three or more conditions. For example, you could test several different speed settings on a machine to determine whether the speed setting affects the % defective. Or, you could collect samples from three or more different processes, such as three machines, that produce the same output. To obtain data that are representative of the processes or process conditions, randomly select the items for each sample. 
+Example:
+Engineers examine samples of bolts from four machines for severe cracks that make the bolts unusable. For each sample, the engineers record the number of bolts that are accepted and the number of bolts that are rejected. They want to determine whether the % defective differs for each machine.
+
+Another example from "STATISTICS FOR BUSINESS AND ECONOMICS" by Anderson:
+The chi-square test statistic can be used to make statistical inferences about the equality of population proportions for three or more populations.
+If the sample data and the chi-square test computations indicate H0 cannot be rejected, we cannot detect a difference among the k population proportions. 
+However, if the sample data and the chi-square test computations indicate H0 can be rejected, we have the statistical
+evidence to conclude that not all k population proportions are equal; that is, one or more population proportions differ from the other population proportions.
+An organization would like to use the proportion of owners likely to repurchase a particular automobile as an indication of customer loyalty for the automobile.
+An automobile with a greater proportion of owners likely to repurchase is concluded to have greater customer loyalty. Suppose that in a particular study we want to compare the customer loyalty for three automobiles: Chevrolet Impala, Ford Fusion, and Honda Accord.
+The current owners of each of the three automobiles form the three populations for the study. 
+The three population proportions of interest are as follows:
+ p1: proportion likely to repurchase an Impala for the population of Chevrolet Impala owners
+ p2: proportion likely to repurchase a Fusion for the population of Ford Fusion owners
+ p3: proportion likely to repurchase an Accord for the population of Honda Accord owners
+The hypotheses are stated as follows:
+ H0: p1 = p2 = p3
+ Ha: Not all population proportions are equal
+URL: http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
+
+Statistical test to use in R: chisq.test() - Chi-Square Test of Independence (aka Chi-Square Test for Association)
+
+### 3.3.2 Three or more proportion tests (three or more outcome categories)
+
+Source (minitab)
+
+The chi-square test for association determines whether the percentage of items in each outcome category is significantly different for two or more samples. 
+
+Percents in each outcome category
+Each item is classified into one of three or more outcome categories, such as poor, fair, good, and excellent. You count the number of items in each category and compare the percentage in each category between the samples. 
+
+Example:
+Analysts at a finance department sample overdue invoices and categorize them by the number of days that payment is overdue: 15 days or less, 16–30 days, or 31 days or more. They want to determine whether the percentage of overdue invoices in each category differs among four different sales regions.
+
+Statistical test to use in R: chisq.test() - Chi-Square Test of Independence (aka Chi-Square Test for Association)
+
+We can use ggbarstats() to show nice bar charts and produce association test (or contingency table analysis).
+https://indrajeetpatil.github.io/ggstatsplot/reference/ggbarstats.html
+
+```{r}
+set.seed(123)
+library(ggstatsplot)
+ggbarstats(mtcars, x = vs, y = cyl,paired = FALSE)
+
+# Create two way table
+tab1 <- table(mtcars$vs,mtcars$cyl)
+
+# Run Pearson's chi-square test
+chisq.test(tab1)
+
+```
+
+

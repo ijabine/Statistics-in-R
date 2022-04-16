@@ -1,0 +1,128 @@
+---
+title: "Two sample proportion tests"
+author: "Illarion  Jabine"
+date: "02/04/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+# 1. Required packages:
+
+
+* ggstatsplot: 
+creates graphics with details from statistical tests included in the plots themselves. 
+It provides an easier syntax to generate information-rich plots for statistical analysis of continuous (violin plots, scatterplots, histograms, dot plots, dot-and-whisker plots) or categorical (pie and bar charts) data. 
+Currently, it supports the most common types of statistical approaches and tests: parametric, nonparametric, robust, and Bayesian versions of t-test/ANOVA, correlation analyses, contingency table analysis, meta-analysis, and regression analyses.
+
+```{r load libraries, message=FALSE, warning=FALSE}
+library(ggstatsplot)
+library(tidyverse)
+```
+
+
+# 2. Key terms and links
+http://www.sthda.com/english/wiki/comparing-proportions-in-r
+https://indrajeetpatil.github.io/ggstatsplot/reference/ggbarstats.html
+To combine bar or pie charts with proportion tests use ggbarstats() from ggstatsplot package.
+# 3. Types of the test of proportions
+We have to distinguish several types of proportion tests:
+ 1. One sample proportion test (compare one sample with a target):
+     Binary outcome categories
+     Three or more outcome categories
+ 2. Two sample proportion tests (compare two samples with each other):
+    Binary outcome categories
+    Three or more outcome categories
+ 3. Three or more population proportion tests (compare more than two samples):
+    Binary outcome categories
+    Three or more outcome categories     
+
+
+## 3.2 Two sample proportion tests (compare two samples with each other)
+
+### 3.2.1 Binary outcome categories
+
+Source (minitab)
+Two % defectives 
+Each item is classified into one of two categories, such as pass/fail or defective/nondefective. You count the number of defective items in each sample and compare the percentage of defectives between the two samples. 
+
+Example:
+Quality engineers at a delivery company count the number of mishandled packages in a sample of deliveries from the old process and in a sample of deliveries from the new process. They want to determine whether the percentage of mishandled packages differs for the two processes. 
+
+URL: http://www.sthda.com/english/wiki/two-proportions-z-test-in-r
+
+Statistical test to use in R: prop.test()
+
+Example using R (example from "STATISTICS FOR BUSINESS AND ECONOMICS" by Anderson):
+A tax preparation firm is interested in comparing the quality of work at two of its regional
+offices. By randomly selecting samples of tax returns prepared at each office and verifying
+the sample returns’ accuracy, the firm will be able to estimate the proportion of
+erroneous returns prepared at each office. Of particular interest is the difference between
+these proportions.
+Independent simple random samples from the two offices provide the following information:
+Office 1
+n1 = 250
+Number of returns with errors = 35
+
+Office 2
+n2 = 300
+Number of returns with errors = 27
+
+Research question is:
+Whether the observed proportion of returns with errors in Office 1 (p1) is equal to the observed proportion of returns with errors in Office 2 (p2)?
+It's two.sided alternative hypothesis.
+
+```{r}
+# x = c(35,27): a vector of counts of successes, i.e. returns with errors
+# n = c(250, 300): a vector of counts of trials
+
+prop.test(x = c(35,27), n = c(250, 300),conf.level = 0.9,correct = FALSE,alternative = "two.sided")
+
+
+```
+Conclusion: 
+With the p-value less than α = .10,
+H0 is rejected at the .10 level of significance. The firm can conclude that the error rates differ between the two offices.
+As an additional check, 0 is not included into the interval estimate of the difference between the population error rates: 0.004815898 0.095184102
+
+chisq.test() function can also be used when there are two levels of proportions.
+It will give exactly the same result as prop.test().
+
+```{r}
+# file is in Data folder
+df <- read.csv("LungCapData.csv",sep = ",")
+
+# create a contingency table:
+tab <- table(Gender,Smoke)
+
+# chisq.test()
+chi_test <- chisq.test(tab)
+
+prop_test <- prop.test(tab)
+
+```
+
+
+### 3.2.2 Three or more outcome categories
+
+Source (minitab)
+Percents in each outcome category
+Each item is classified into one of three or more outcome categories, such as poor, fair, good, and excellent. You count the number of items in each category and compare the percentage in each category between the two samples. 
+
+Example:
+Analysts at a finance department sample overdue invoices and categorize them by the number of days that payment is overdue: 15 days or less, 16–30 days, or 31 days or more. They want to determine whether the percentage of overdue invoices in each category differs before and after they increase late fees. 
+
+URL: http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
+https://en.wikipedia.org/wiki/Pearson%27s_chi-squared_test
+https://libguides.library.kent.edu/SPSS/ChiSquare
+
+Statistical test to use in R: chisq.test() - Chi-Square Test of Independence (aka Chi-Square Test for Association)
