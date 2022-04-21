@@ -107,6 +107,8 @@ tab1 <- table(mtcars$vs,mtcars$cyl)
 
 # Run Pearson's chi-square test
 chisq.test(tab1)
+# Or using pipes:
+mtcars %>% select(vs,cyl) %>% table() %>% chisq.test()
 
 ```
 
