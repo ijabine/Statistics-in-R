@@ -64,11 +64,13 @@ Engineers examine samples of bolts from four machines for severe cracks that mak
 Another example from "STATISTICS FOR BUSINESS AND ECONOMICS" by Anderson:
 The chi-square test statistic can be used to make statistical inferences about the equality of population proportions for three or more populations.
 If the sample data and the chi-square test computations indicate H0 cannot be rejected, we cannot detect a difference among the k population proportions. 
-However, if the sample data and the chi-square test computations indicate H0 can be rejected, we have the statistical
-evidence to conclude that not all k population proportions are equal; that is, one or more population proportions differ from the other population proportions.
+However, if the sample data and the chi-square test computations indicate H0 can be rejected, we have the statistical evidence to conclude that not all k population proportions are equal; that is, one or more population proportions differ from the other population proportions.
 An organization would like to use the proportion of owners likely to repurchase a particular automobile as an indication of customer loyalty for the automobile.
-An automobile with a greater proportion of owners likely to repurchase is concluded to have greater customer loyalty. Suppose that in a particular study we want to compare the customer loyalty for three automobiles: Chevrolet Impala, Ford Fusion, and Honda Accord.
+An automobile with a greater proportion of owners likely to repurchase is concluded to have greater customer loyalty. 
+Suppose that in a particular study we want to compare the customer loyalty for three automobiles: Chevrolet Impala, Ford Fusion, and Honda Accord.
+
 The current owners of each of the three automobiles form the three populations for the study. 
+
 The three population proportions of interest are as follows:
  p1: proportion likely to repurchase an Impala for the population of Chevrolet Impala owners
  p2: proportion likely to repurchase a Fusion for the population of Ford Fusion owners
@@ -112,4 +114,61 @@ mtcars %>% select(vs,cyl) %>% table() %>% chisq.test()
 
 ```
 
+Example 2:
+A manufacturer is considering purchasing parts from three different suppliers. The parts
+received from the suppliers are classified as having a minor defect, having a major defect,
+or being good.
+Note that any test with these data is no longer a test of proportions for
+the three supplier populations because the categorical response variable has three
+outcomes: minor defect, major defect, and good.
+Using the data above, conduct a hypothesis test to determine if the distribution of defects
+is the same for the three suppliers. Use the chi-square test calculations with the exception that a table with r rows and c columns results in a chisquare test statistic with (r – 1)(c – 1) degrees of freedom. Using a .05 level of significance.
+```{r}
+library(tidyverse)
+md <- matrix(c(15,13,21,5,11,5,130,126,124), nrow = 3, ncol = 3, byrow = TRUE, 
+             dimnames = list(c("Minor Defect","Major Defect","Good"),
+                             c("Supplier A","Supplier B","Supplier C"))
+             )
+chisq.test(md)
+```
+### 3.3.3 Test of Independence
 
+A chi-square test involves using sample data to test for the independence of two categorical variables.
+
+Example:
+A beer industry association conducts a survey to determine the preferences of beer
+drinkers for light, regular, and dark beers. A sample of 200 beer drinkers is taken with each
+person in the sample asked to indicate a preference for one of the three types of beers: light,
+regular, or dark. At the end of the survey questionnaire, the respondent is asked to provide information
+on a variety of demographics including gender: male or female. 
+A research question of interest to the association is whether preference for the three types of beer is
+independent of the gender of the beer drinker. 
+If the two categorical variables, beer preference and gender, are independent, beer preference does not depend on gender and the preference for light, regular, and dark beer can be expected to be the same for male and female beer drinkers. 
+However, if the test conclusion is that the two categorical variables are not independent, we have evidence that beer preference is associated or dependent upon the gender of the beer drinker. 
+As a result, we can expect beer preferences to differ for male and female beer drinkers. In this case, a beer manufacturer could use this information to customize its promotions and advertising for the different target markets of male and female beer drinkers.
+
+The hypotheses for this test of independence are as follows:
+H0: Beer preference is independent of gender
+Ha: Beer preference is not independent of gender
+
+
+```{r}
+md1 <- matrix(c(51,39,56,21,25,8), nrow = 3, ncol = 2, byrow = TRUE, 
+             dimnames = list(c("Light","Regular","Dark"),
+                             c("Male","Female"))
+             )
+chisq.test(md1)
+```
+With p-value < .05, we reject H0 and conclude that beer preference is not independent of the gender of the beer drinker.
+Or in other words, the study shows that beer preference can be expected to differ for male and female
+beer drinkers.
+
+Instead of using the p-value, we could use the critical value approach to draw the same
+conclusion. With alfa = .05 and 2 degrees of freedom, the critical value for the chi-square test
+statistic is 5.991:
+```{r}
+qchisq(p = 0.95,df=2)
+```
+The upper tail rejection region becomes:
+Reject H0 if >= 5.991
+With 6.45 > 5.991, we reject H0.
